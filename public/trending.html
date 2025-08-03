@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trending - Moral Dilemma Platform</title>
+    <meta name="description" content="Discover the most trending moral dilemmas across all categories">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .header {
+            background: rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            color: white;
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.8;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: white;
+        }
+
+        .page-header h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .page-header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .controls {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .filter-group label {
+            color: white;
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .filter-group select {
+            padding: 0.75rem 1rem;
+            border: none;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.9);
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .filter-group select:focus {
+            outline: none;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
+        }
+
+        .trending-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 2rem;
+        }
+
+        .question-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .question-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1);
+        }
+
+        .question-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .category-badge {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            text-transform: capitalize;
+            font-weight: 500;
+        }
+
+        .trending-badge {
+            background: linear-gradient(135deg, #ff6b6b, #ff8e53);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .trending-badge i {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .question-title {
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: #333;
+            line-height: 1.3;
+        }
+
+        .question-text {
+            color: #666;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .question-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .stat {
+            text-align: center;
+            padding: 0.5rem;
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 8px;
+        }
+
+        .stat .value {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat .label {
+            font-size: 0.8rem;
+            color: #666;
+            text-transform: uppercase;
+        }
+
+        .question-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .question-type {
+            background: #f8f9fa;
+            padding: 0.2rem 0.6rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            text-transform: capitalize;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: white;
+        }
+
+        .loading i {
+            font-size: 3rem;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .error {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            color: white;
+        }
+
+        .error i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #ff6b6b;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 3rem;
+            color: white;
+        }
+
+        .no-results i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.7;
+        }
+
+        @media (max-width: 768px) {
+            .nav-container {
+                padding: 0 1rem;
+            }
+
+            .nav-links {
+                gap: 1rem;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            .page-header h1 {
+                font-size: 2rem;
+            }
+
+            .trending-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .filter-group {
+                align-items: center;
+            }
+
+            .question-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav-container">
+            <a href="/" class="logo">Moral Dilemmas</a>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/categories">Categories</a></li>
+                <li><a href="/trending">Trending</a></li>
+                <li><a href="/about">About</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="container">
+        <div class="page-header">
+            <h1><i class="fas fa-fire"></i> Trending Questions</h1>
+            <p>Discover the most engaging moral dilemmas that are capturing attention right now</p>
+        </div>
+
+        <div class="controls">
+            <div class="filter-group">
+                <label for="categoryFilter">Category</label>
+                <select id="categoryFilter">
+                    <option value="">All Categories</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="limitFilter">Show</label>
+                <select id="limitFilter">
+                    <option value="10">Top 10</option>
+                    <option value="20" selected>Top 20</option>
+                    <option value="30">Top 30</option>
+                    <option value="50">Top 50</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="loading" class="loading">
+            <i class="fas fa-spinner"></i>
+            <p>Loading trending questions...</p>
+        </div>
+
+        <div id="error" class="error" style="display: none;">
+            <i class="fas fa-exclamation-triangle"></i>
+            <h3>Failed to load trending questions</h3>
+            <p>Please try refreshing the page</p>
+        </div>
+
+        <div id="noResults" class="no-results" style="display: none;">
+            <i class="fas fa-search"></i>
+            <h3>No trending questions found</h3>
+            <p>Try adjusting your filters or check back later</p>
+        </div>
+
+        <div class="trending-grid" id="trendingGrid" style="display: none;">
+            <!-- Trending questions will be loaded here -->
+        </div>
+    </main>
+
+    <script>
+        let allCategories = [];
+        let currentQuestions = [];
+
+        async function loadCategories() {
+            try {
+                const response = await fetch('/api/questions/categories');
+                const data = await response.json();
+
+                if (data.success) {
+                    allCategories = data.data;
+                    populateCategoryFilter();
+                }
+            } catch (error) {
+                console.error('Error loading categories:', error);
+            }
+        }
+
+        function populateCategoryFilter() {
+            const categoryFilter = document.getElementById('categoryFilter');
+            categoryFilter.innerHTML = '<option value="">All Categories</option>';
+            
+            allCategories.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category.name;
+                option.textContent = category.name.charAt(0).toUpperCase() + category.name.slice(1);
+                categoryFilter.appendChild(option);
+            });
+        }
+
+        async function loadTrendingQuestions() {
+            const categoryFilter = document.getElementById('categoryFilter').value;
+            const limitFilter = document.getElementById('limitFilter').value;
+
+            try {
+                showLoading();
+                
+                let url = `/api/questions/trending?limit=${limitFilter}`;
+                if (categoryFilter) {
+                    url += `&category=${categoryFilter}`;
+                }
+
+                const response = await fetch(url);
+                const data = await response.json();
+
+                if (!data.success) {
+                    throw new Error(data.error || 'Failed to load trending questions');
+                }
+
+                currentQuestions = data.data;
+                displayTrendingQuestions(data.data);
+                
+                hideLoading();
+            } catch (error) {
+                console.error('Error loading trending questions:', error);
+                showError();
+            }
+        }
+
+        function displayTrendingQuestions(questions) {
+            const trendingGrid = document.getElementById('trendingGrid');
+            
+            if (questions.length === 0) {
+                showNoResults();
+                return;
+            }
+
+            trendingGrid.innerHTML = questions.map((question, index) => {
+                const createdDate = new Date(question.createdAt).toLocaleDateString();
+                const metrics = question.popularityMetrics || {};
+                
+                return `
+                    <div class="question-card" onclick="navigateToQuestion('${question.category}', '${question.slug}')">
+                        <div class="question-header">
+                            <span class="category-badge">${question.category}</span>
+                            <span class="trending-badge">
+                                <i class="fas fa-fire"></i>
+                                #${index + 1}
+                            </span>
+                        </div>
+                        
+                        <h3 class="question-title">${question.title}</h3>
+                        <p class="question-text">${question.questionText}</p>
+                        
+                        <div class="question-stats">
+                            <div class="stat">
+                                <div class="value">${(metrics.trendingScore || 0).toFixed(1)}</div>
+                                <div class="label">Trend Score</div>
+                            </div>
+                            <div class="stat">
+                                <div class="value">${(metrics.totalViews || 0).toLocaleString()}</div>
+                                <div class="label">Views</div>
+                            </div>
+                            <div class="stat">
+                                <div class="value">${(metrics.totalResponses || 0).toLocaleString()}</div>
+                                <div class="label">Responses</div>
+                            </div>
+                            <div class="stat">
+                                <div class="value">${(metrics.engagementRate || 0).toFixed(1)}%</div>
+                                <div class="label">Engagement</div>
+                            </div>
+                        </div>
+                        
+                        <div class="question-meta">
+                            <span class="question-type">${question.questionType.replace('_', ' ')}</span>
+                            <span>Created: ${createdDate}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            trendingGrid.style.display = 'grid';
+        }
+
+        function navigateToQuestion(category, slug) {
+            window.location.href = `/${category}/${slug}`;
+        }
+
+        function showLoading() {
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('error').style.display = 'none';
+            document.getElementById('noResults').style.display = 'none';
+            document.getElementById('trendingGrid').style.display = 'none';
+        }
+
+        function hideLoading() {
+            document.getElementById('loading').style.display = 'none';
+        }
+
+        function showError() {
+            hideLoading();
+            document.getElementById('error').style.display = 'block';
+            document.getElementById('noResults').style.display = 'none';
+            document.getElementById('trendingGrid').style.display = 'none';
+        }
+
+        function showNoResults() {
+            hideLoading();
+            document.getElementById('error').style.display = 'none';
+            document.getElementById('noResults').style.display = 'block';
+            document.getElementById('trendingGrid').style.display = 'none';
+        }
+
+        // Event listeners
+        document.getElementById('categoryFilter').addEventListener('change', loadTrendingQuestions);
+        document.getElementById('limitFilter').addEventListener('change', loadTrendingQuestions);
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadCategories();
+            await loadTrendingQuestions();
+        });
+    </script>
+</body>
+</html>

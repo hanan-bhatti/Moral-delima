@@ -1,0 +1,1384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics Dashboard - Moral Dilemma Admin</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .control-group label {
+            font-weight: 600;
+            color: #555;
+        }
+
+        select, button {
+            padding: 10px 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            background: white;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        select:focus, button:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card h3 {
+            color: #666;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .stat-value {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .stat-change {
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .positive { color: #10b981; }
+        .negative { color: #ef4444; }
+        .neutral { color: #6b7280; }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .chart-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .chart-container h3 {
+            margin-bottom: 20px;
+            color: #333;
+            font-size: 1.3rem;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .table-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .table-header {
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .table-header h3 {
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        th {
+            background: #f9fafb;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        tbody tr:hover {
+            background: #f3f4f6;
+        }
+
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .loading i {
+            margin-right: 10px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error {
+            background: #fee2e2;
+            border: 1px solid #fecaca;
+            color: #dc2626;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge-multiple-choice {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .badge-paragraph {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .badge-featured {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .export-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .btn-export {
+            padding: 8px 16px;
+            background: #059669;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .btn-export:hover {
+            background: #047857;
+        }
+
+        .auth-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .auth-modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .auth-modal h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .auth-modal input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+
+        .auth-modal input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .auth-modal button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .chart-placeholder {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 300px;
+            background: #f9fafb;
+            border-radius: 8px;
+            color: #666;
+            font-style: italic;
+        }
+
+        @media (max-width: 768px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .control-group {
+                justify-content: space-between;
+            }
+            
+            table {
+                font-size: 0.9rem;
+            }
+            
+            th, td {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Auth Modal -->
+    <div id="authModal" class="auth-modal">
+        <div class="auth-modal-content">
+            <h2><i class="fas fa-lock"></i> Admin Authentication</h2>
+            <input type="password" id="adminSecretInput" placeholder="Enter admin secret" />
+            <button id="loginBtn">Login</button>
+            <div id="authError" class="error" style="display: none; margin-top: 15px;"></div>
+        </div>
+    </div>
+
+    <div class="container" id="mainContent" style="display: none;">
+        <div class="header">
+            <h1><i class="fas fa-chart-line"></i> Analytics Dashboard</h1>
+            <p>Comprehensive insights into your moral dilemma platform</p>
+            
+            <div class="header-controls">
+                <div class="control-group">
+                    <label for="timeRange">Time Range:</label>
+                    <select id="timeRange">
+                        <option value="24h">Last 24 Hours</option>
+                        <option value="7d" selected>Last 7 Days</option>
+                        <option value="30d">Last 30 Days</option>
+                        <option value="all">All Time</option>
+                    </select>
+                </div>
+                
+                <div class="control-group">
+                    <label for="categoryFilter">Category:</label>
+                    <select id="categoryFilter">
+                        <option value="">All Categories</option>
+                    </select>
+                </div>
+                
+                <button id="refreshBtn">
+                    <i class="fas fa-sync-alt"></i> Refresh Data
+                </button>
+                
+                <button id="recalculateBtn">
+                    <i class="fas fa-calculator"></i> Recalculate Metrics
+                </button>
+            </div>
+        </div>
+
+        <!-- Overview Stats -->
+        <div class="stats-grid" id="statsGrid">
+            <!-- Stats will be populated here -->
+        </div>
+
+        <!-- Charts -->
+        <div class="charts-grid">
+            <div class="chart-container">
+                <h3><i class="fas fa-chart-area"></i> Activity Over Time</h3>
+                <canvas id="activityChart" width="400" height="200"></canvas>
+            </div>
+            
+            <div class="chart-container">
+                <h3><i class="fas fa-chart-pie"></i> Question Types</h3>
+                <canvas id="questionTypesChart" width="400" height="200"></canvas>
+            </div>
+        </div>
+
+        <div class="charts-grid">
+            <div class="chart-container">
+                <h3><i class="fas fa-chart-bar"></i> Category Performance</h3>
+                <canvas id="categoryChart" width="400" height="200"></canvas>
+            </div>
+            
+            <div class="chart-container">
+                <h3><i class="fas fa-fire"></i> Trending Score Distribution</h3>
+                <canvas id="trendingChart" width="400" height="200"></canvas>
+            </div>
+        </div>
+
+        <!-- Export Buttons -->
+        <div class="export-buttons">
+            <button class="btn-export" id="exportJsonBtn">
+                <i class="fas fa-download"></i> Export JSON
+            </button>
+            <button class="btn-export" id="exportCsvBtn">
+                <i class="fas fa-file-csv"></i> Export CSV
+            </button>
+        </div>
+
+        <!-- Top Questions Table -->
+        <div class="table-container">
+            <div class="table-header">
+                <h3><i class="fas fa-trophy"></i> Top Performing Questions</h3>
+                <p>Questions ranked by popularity score</p>
+            </div>
+            <div id="topQuestionsTable">
+                <div class="loading">
+                    <i class="fas fa-spinner"></i> Loading top questions...
+                </div>
+            </div>
+        </div>
+
+        <!-- Trending Questions Table -->
+        <div class="table-container">
+            <div class="table-header">
+                <h3><i class="fas fa-trending-up"></i> Trending Questions</h3>
+                <p>Questions with highest recent activity</p>
+            </div>
+            <div id="trendingQuestionsTable">
+                <div class="loading">
+                    <i class="fas fa-spinner"></i> Loading trending questions...
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load Chart.js from CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.js"></script>
+    
+    <script>
+        // Global variables
+        let dashboardData = null;
+        let charts = {};
+        let adminSecret = null;
+        let chartLibraryLoaded = false;
+
+        // Wait for Chart.js to load
+        function waitForChart() {
+            return new Promise((resolve) => {
+                if (typeof Chart !== 'undefined') {
+                    chartLibraryLoaded = true;
+                    resolve();
+                } else {
+                    setTimeout(() => waitForChart().then(resolve), 100);
+                }
+            });
+        }
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', async function() {
+            setupEventListeners();
+            showAuthModal();
+            
+            // Wait for Chart.js to load
+            try {
+                await waitForChart();
+                console.log('Chart.js loaded successfully');
+            } catch (error) {
+                console.error('Failed to load Chart.js:', error);
+            }
+        });
+
+        // Setup event listeners
+        function setupEventListeners() {
+            document.getElementById('loginBtn').addEventListener('click', handleLogin);
+            document.getElementById('adminSecretInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    handleLogin();
+                }
+            });
+            
+            document.getElementById('timeRange').addEventListener('change', refreshData);
+            document.getElementById('categoryFilter').addEventListener('change', refreshData);
+            document.getElementById('refreshBtn').addEventListener('click', refreshData);
+            document.getElementById('recalculateBtn').addEventListener('click', recalculateMetrics);
+            document.getElementById('exportJsonBtn').addEventListener('click', () => exportData('json'));
+            document.getElementById('exportCsvBtn').addEventListener('click', () => exportData('csv'));
+        }
+
+        // Authentication
+        function showAuthModal() {
+            document.getElementById('authModal').style.display = 'flex';
+            document.getElementById('mainContent').style.display = 'none';
+        }
+
+        function hideAuthModal() {
+            document.getElementById('authModal').style.display = 'none';
+            document.getElementById('mainContent').style.display = 'block';
+        }
+
+        async function handleLogin() {
+            const secretInput = document.getElementById('adminSecretInput');
+            const errorDiv = document.getElementById('authError');
+            
+            adminSecret = secretInput.value.trim();
+            
+            if (!adminSecret) {
+                showAuthError('Please enter the admin secret');
+                return;
+            }
+
+            try {
+                // Test the secret by making a request to the dashboard endpoint
+                const response = await fetch('/api/analytics/dashboard?range=7d', {
+                    headers: { 'X-Admin-Secret': adminSecret }
+                });
+                
+                if (response.status === 401 || response.status === 403) {
+                    showAuthError('Invalid admin secret');
+                    return;
+                }
+                
+                if (response.status === 404) {
+                    showAuthError('Analytics API not available. Server may not be running.');
+                    return;
+                }
+                
+                // Even if there's an error in the data, if we get past auth, we're authenticated
+                if (response.status >= 200 && response.status < 300) {
+                    hideAuthModal();
+                    initializeDashboard();
+                    return;
+                }
+                
+                // If we get here, something went wrong but we might still be authenticated
+                // Let's try to proceed and see if the error handler can deal with it
+                hideAuthModal();
+                initializeDashboard();
+                
+            } catch (error) {
+                console.error('Authentication error:', error);
+                showAuthError('Failed to connect to server. Please check if the server is running.');
+            }
+        }
+
+        function showAuthError(message) {
+            const errorDiv = document.getElementById('authError');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        // Initialize dashboard after successful authentication
+        async function initializeDashboard() {
+            try {
+                await loadCategories();
+                await refreshData();
+            } catch (error) {
+                console.error('Error initializing dashboard:', error);
+                showError('Failed to initialize dashboard');
+            }
+        }
+
+        // Load categories for filter
+        async function loadCategories() {
+            try {
+                const response = await fetch('/api/questions/categories');
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.success && data.data) {
+                    const categoryFilter = document.getElementById('categoryFilter');
+                    data.data.forEach(category => {
+                        const option = document.createElement('option');
+                        option.value = category.name || category.category;
+                        option.textContent = category.displayName || category.name || category.category;
+                        categoryFilter.appendChild(option);
+                    });
+                } else {
+                    throw new Error('Invalid response format');
+                }
+            } catch (error) {
+                console.warn('Failed to load categories from API, using fallback:', error.message);
+                // Demo categories - fallback when API is not available
+                const categories = [
+                    { name: 'ethics', displayName: 'Ethics' },
+                    { name: 'relationships', displayName: 'Relationships' },
+                    { name: 'work', displayName: 'Work' },
+                    { name: 'personal', displayName: 'Personal' },
+                    { name: 'justice', displayName: 'Justice' },
+                    { name: 'family', displayName: 'Family' },
+                    { name: 'freedom', displayName: 'Freedom' },
+                    { name: 'truth', displayName: 'Truth' }
+                ];
+                
+                const categoryFilter = document.getElementById('categoryFilter');
+                categories.forEach(category => {
+                    const option = document.createElement('option');
+                    option.value = category.name;
+                    option.textContent = category.displayName;
+                    categoryFilter.appendChild(option);
+                });
+            }
+        }
+
+        // Refresh all data
+        async function refreshData() {
+            const timeRange = document.getElementById('timeRange').value;
+            const category = document.getElementById('categoryFilter').value;
+            
+            try {
+                showLoading();
+                await Promise.all([
+                    loadDashboardData(timeRange, category),
+                    loadTrendingData(timeRange)
+                ]);
+                hideLoading();
+            } catch (error) {
+                console.error('Error refreshing data:', error);
+                showError('Failed to load analytics data. Using demo data instead.');
+                loadDemoData();
+                hideLoading();
+            }
+        }
+
+        // Load demo data when API is not available
+        function loadDemoData() {
+            const demoData = {
+                overview: {
+                    totalQuestions: 1245,
+                    totalViews: 89750,
+                    totalResponses: 15632,
+                    avgPopularity: 67.8,
+                    avgEngagement: 17.4,
+                    totalUniqueViews: 45200
+                },
+                recentActivity: [
+                    { date: '2024-01-01', questionsCreated: 15, totalViews: 1200, totalResponses: 230 },
+                    { date: '2024-01-02', questionsCreated: 18, totalViews: 1350, totalResponses: 280 },
+                    { date: '2024-01-03', questionsCreated: 12, totalViews: 980, totalResponses: 190 },
+                    { date: '2024-01-04', questionsCreated: 22, totalViews: 1580, totalResponses: 320 },
+                    { date: '2024-01-05', questionsCreated: 19, totalViews: 1420, totalResponses: 270 },
+                    { date: '2024-01-06', questionsCreated: 25, totalViews: 1750, totalResponses: 380 },
+                    { date: '2024-01-07', questionsCreated: 16, totalViews: 1100, totalResponses: 210 }
+                ],
+                questionTypes: [
+                    { type: 'multiple_choice', count: 850 },
+                    { type: 'paragraph', count: 395 }
+                ],
+                categoryPerformance: [
+                    { category: 'ethics', avgPopularity: 85.2 },
+                    { category: 'relationships', avgPopularity: 72.8 },
+                    { category: 'work', avgPopularity: 68.5 },
+                    { category: 'personal', avgPopularity: 61.3 },
+                    { category: 'philosophy', avgPopularity: 58.7 }
+                ],
+                topQuestions: [
+                    {
+                        title: 'Should you tell your friend their partner is cheating?',
+                        category: 'relationships',
+                        questionType: 'multiple_choice',
+                        slug: 'friend-partner-cheating',
+                        popularityMetrics: { popularityScore: 95.6, totalViews: 2450, totalResponses: 580 },
+                        createdAt: '2024-01-15T10:30:00Z'
+                    },
+                    {
+                        title: 'Is it ethical to lie on your resume?',
+                        category: 'work',
+                        questionType: 'paragraph',
+                        slug: 'lie-resume-ethics',
+                        popularityMetrics: { popularityScore: 87.3, totalViews: 1920, totalResponses: 430 },
+                        createdAt: '2024-01-12T14:20:00Z'
+                    },
+                    {
+                        title: 'Would you save one person or five strangers?',
+                        category: 'ethics',
+                        questionType: 'multiple_choice',
+                        slug: 'trolley-problem-variant',
+                        popularityMetrics: { popularityScore: 84.7, totalViews: 3100, totalResponses: 720 },
+                        createdAt: '2024-01-10T09:15:00Z'
+                    }
+                ]
+            };
+
+            updateStatsGrid(demoData.overview);
+            updateCharts(demoData);
+            updateTopQuestionsTable(demoData.topQuestions);
+            updateTrendingQuestionsTable(demoData.topQuestions); // Use same data for demo
+        }
+
+        // Load dashboard data
+        async function loadDashboardData(timeRange, category) {
+            const params = new URLSearchParams({
+                range: timeRange,
+                ...(category && { category })
+            });
+            
+            try {
+                const response = await fetch(`/api/analytics/dashboard?${params}`, {
+                    headers: { 'X-Admin-Secret': adminSecret }
+                });
+                
+                if (response.status === 401 || response.status === 403) {
+                    showAuthModal();
+                    throw new Error('Authentication required');
+                }
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                if (!data.success) {
+                    throw new Error(data.error || 'API returned error');
+                }
+                
+                dashboardData = data.data;
+                
+                updateStatsGrid(dashboardData.overview);
+                updateCharts(dashboardData);
+                updateTopQuestionsTable(dashboardData.topQuestions);
+            } catch (error) {
+                console.warn('API call failed, using demo data:', error.message);
+                // Fall back to demo data
+                throw error;
+            }
+        }
+
+        // Load trending data
+        async function loadTrendingData(timeRange) {
+            try {
+                const response = await fetch(`/api/analytics/trends?range=${timeRange}`, {
+                    headers: { 'X-Admin-Secret': adminSecret }
+                });
+                
+                if (response.status === 401 || response.status === 403) {
+                    showAuthModal();
+                    throw new Error('Authentication required');
+                }
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    updateTrendingQuestionsTable(data.data.trendingQuestions);
+                }
+            } catch (error) {
+                console.warn('Trending API call failed:', error.message);
+                // This will be handled by the main error handler
+                throw error;
+            }
+        }
+
+        // Update stats grid
+        function updateStatsGrid(overview) {
+            const statsGrid = document.getElementById('statsGrid');
+            
+            const stats = [
+                {
+                    title: 'Total Questions',
+                    value: overview.totalQuestions || 0,
+                    icon: 'fas fa-question-circle'
+                },
+                {
+                    title: 'Total Views',
+                    value: (overview.totalViews || 0).toLocaleString(),
+                    icon: 'fas fa-eye'
+                },
+                {
+                    title: 'Total Responses',
+                    value: (overview.totalResponses || 0).toLocaleString(),
+                    icon: 'fas fa-comments'
+                },
+                {
+                    title: 'Average Popularity',
+                    value: Math.round((overview.avgPopularity || 0) * 100) / 100,
+                    icon: 'fas fa-star'
+                },
+                {
+                    title: 'Engagement Rate',
+                    value: Math.round((overview.avgEngagement || 0) * 100) / 100 + '%',
+                    icon: 'fas fa-chart-line'
+                },
+                {
+                    title: 'Unique Views',
+                    value: (overview.totalUniqueViews || 0).toLocaleString(),
+                    icon: 'fas fa-users'
+                }
+            ];
+            
+            statsGrid.innerHTML = stats.map(stat => `
+                <div class="stat-card">
+                    <h3><i class="${stat.icon}"></i> ${stat.title}</h3>
+                    <div class="stat-value">${stat.value}</div>
+                </div>
+            `).join('');
+        }
+
+        // Update charts
+        function updateCharts(data) {
+            if (!chartLibraryLoaded) {
+                console.warn('Chart.js not loaded yet, showing placeholders');
+                showChartPlaceholders();
+                return;
+            }
+            
+            updateActivityChart(data.recentActivity);
+            updateQuestionTypesChart(data.questionTypes);
+            updateCategoryChart(data.categoryPerformance);
+            updateTrendingChart(data.topQuestions);
+        }
+
+        // Show placeholders when charts can't load
+        function showChartPlaceholders() {
+            const chartIds = ['activityChart', 'questionTypesChart', 'categoryChart', 'trendingChart'];
+            chartIds.forEach(id => {
+                const canvas = document.getElementById(id);
+                if (canvas) {
+                    const container = canvas.parentElement;
+                    container.innerHTML = container.innerHTML.replace(canvas.outerHTML, 
+                        '<div class="chart-placeholder">Chart loading...</div>');
+                }
+            });
+        }
+
+        // Activity chart
+        function updateActivityChart(activityData) {
+            const ctx = document.getElementById('activityChart');
+            if (!ctx || typeof Chart === 'undefined') {
+                console.warn('Chart.js not available for activity chart');
+                return;
+            }
+            
+            if (charts.activity) {
+                charts.activity.destroy();
+            }
+            
+            if (!activityData || activityData.length === 0) {
+                const container = ctx.parentElement;
+                container.innerHTML = container.innerHTML.replace(ctx.outerHTML, 
+                    '<div class="chart-placeholder">No activity data available</div>');
+                return;
+            }
+            
+            const labels = activityData.map(item => item.date);
+            const questionsData = activityData.map(item => item.questionsCreated);
+            const viewsData = activityData.map(item => item.totalViews);
+            const responsesData = activityData.map(item => item.totalResponses);
+            
+            charts.activity = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Questions Created',
+                            data: questionsData,
+                            borderColor: '#667eea',
+                            backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Views',
+                            data: viewsData,
+                            borderColor: '#10b981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Responses',
+                            data: responsesData,
+                            borderColor: '#f59e0b',
+                            backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        // Question types chart
+        function updateQuestionTypesChart(typesData) {
+            const ctx = document.getElementById('questionTypesChart');
+            if (!ctx || typeof Chart === 'undefined') {
+                console.warn('Chart.js not available for question types chart');
+                return;
+            }
+            
+            if (charts.types) {
+                charts.types.destroy();
+            }
+            
+            if (!typesData || typesData.length === 0) {
+                const container = ctx.parentElement;
+                container.innerHTML = container.innerHTML.replace(ctx.outerHTML, 
+                    '<div class="chart-placeholder">No question type data</div>');
+                return;
+            }
+            
+            const labels = typesData.map(type => 
+                type.type === 'multiple_choice' ? 'Multiple Choice' : 'Paragraph'
+            );
+            const counts = typesData.map(type => type.count);
+            
+            charts.types = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: counts,
+                        backgroundColor: [
+                            '#667eea',
+                            '#10b981',
+                            '#f59e0b',
+                            '#ef4444'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        }
+
+        // Category performance chart
+        function updateCategoryChart(categoryData) {
+            const ctx = document.getElementById('categoryChart');
+            if (!ctx || typeof Chart === 'undefined') {
+                console.warn('Chart.js not available for category chart');
+                return;
+            }
+            
+            if (charts.category) {
+                charts.category.destroy();
+            }
+            
+            if (!categoryData || categoryData.length === 0) {
+                const container = ctx.parentElement;
+                container.innerHTML = container.innerHTML.replace(ctx.outerHTML, 
+                    '<div class="chart-placeholder">No category data</div>');
+                return;
+            }
+            
+            const labels = categoryData.slice(0, 10).map(cat => 
+                cat.category.charAt(0).toUpperCase() + cat.category.slice(1)
+            );
+            const popularity = categoryData.slice(0, 10).map(cat => cat.avgPopularity);
+            
+            charts.category = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Average Popularity',
+                        data: popularity,
+                        backgroundColor: 'rgba(102, 126, 234, 0.7)',
+                        borderColor: '#667eea',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        },
+                        x: {
+                            ticks: {
+                                maxRotation: 45
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Trending distribution chart
+        function updateTrendingChart(questionsData) {
+            const ctx = document.getElementById('trendingChart');
+            if (!ctx || typeof Chart === 'undefined') {
+                console.warn('Chart.js not available for trending chart');
+                return;
+            }
+            
+            if (charts.trending) {
+                charts.trending.destroy();
+            }
+            
+            if (!questionsData || questionsData.length === 0) {
+                const container = ctx.parentElement;
+                container.innerHTML = container.innerHTML.replace(ctx.outerHTML, 
+                    '<div class="chart-placeholder">No trending data</div>');
+                return;
+            }
+            
+            // Create score buckets
+            const buckets = {
+                '0-10': 0,
+                '11-50': 0,
+                '51-100': 0,
+                '101-500': 0,
+                '500+': 0
+            };
+            
+            questionsData.forEach(item => {
+                const score = item.popularityMetrics?.popularityScore || 0;
+                if (score <= 10) buckets['0-10']++;
+                else if (score <= 50) buckets['11-50']++;
+                else if (score <= 100) buckets['51-100']++;
+                else if (score <= 500) buckets['101-500']++;
+                else buckets['500+']++;
+            });
+            
+            charts.trending = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(buckets),
+                    datasets: [{
+                        label: 'Number of Questions',
+                        data: Object.values(buckets),
+                        backgroundColor: 'rgba(245, 158, 11, 0.7)',
+                        borderColor: '#f59e0b',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        // Update top questions table
+        function updateTopQuestionsTable(questions) {
+            const container = document.getElementById('topQuestionsTable');
+            
+            if (!questions || questions.length === 0) {
+                container.innerHTML = '<div class="error">No questions found</div>';
+                return;
+            }
+            
+            const tableHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Category</th>
+                            <th>Type</th>
+                            <th>Popularity Score</th>
+                            <th>Views</th>
+                            <th>Responses</th>
+                            <th>Created</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${questions.map(question => `
+                            <tr>
+                                <td>
+                                    <a href="/${question.category}/${question.slug}" target="_blank">
+                                        ${question.title}
+                                    </a>
+                                </td>
+                                <td>${question.category}</td>
+                                <td>
+                                    <span class="badge badge-${question.questionType?.replace('_', '-') || 'multiple-choice'}">
+                                        ${question.questionType === 'paragraph' ? 'Paragraph' : 'Multiple Choice'}
+                                    </span>
+                                </td>
+                                <td>${Math.round((question.popularityMetrics?.popularityScore || 0) * 100) / 100}</td>
+                                <td>${(question.popularityMetrics?.totalViews || 0).toLocaleString()}</td>
+                                <td>${(question.popularityMetrics?.totalResponses || 0).toLocaleString()}</td>
+                                <td>${new Date(question.createdAt).toLocaleDateString()}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+            
+            container.innerHTML = tableHTML;
+        }
+
+        // Update trending questions table
+        function updateTrendingQuestionsTable(questions) {
+            const container = document.getElementById('trendingQuestionsTable');
+            
+            if (!questions || questions.length === 0) {
+                container.innerHTML = '<div class="error">No trending questions found</div>';
+                return;
+            }
+            
+            const tableHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Category</th>
+                            <th>Type</th>
+                            <th>Trend Score</th>
+                            <th>Recent Views</th>
+                            <th>Recent Responses</th>
+                            <th>Created</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${questions.map(question => `
+                            <tr>
+                                <td>
+                                    <a href="/${question.category}/${question.slug}" target="_blank">
+                                        ${question.title}
+                                    </a>
+                                </td>
+                                <td>${question.category}</td>
+                                <td>
+                                    <span class="badge badge-${question.questionType?.replace('_', '-') || 'multiple-choice'}">
+                                        ${question.questionType === 'paragraph' ? 'Paragraph' : 'Multiple Choice'}
+                                    </span>
+                                </td>
+                                <td>${Math.round((question.trendScore || question.popularityMetrics?.popularityScore || 0) * 100) / 100}</td>
+                                <td>${(question.recentViews || question.popularityMetrics?.totalViews || 0).toLocaleString()}</td>
+                                <td>${(question.recentResponses || question.popularityMetrics?.totalResponses || 0).toLocaleString()}</td>
+                                <td>${new Date(question.createdAt).toLocaleDateString()}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+            
+            container.innerHTML = tableHTML;
+        }
+
+        // Recalculate metrics
+        async function recalculateMetrics() {
+            const category = document.getElementById('categoryFilter').value;
+            
+            if (!confirm('This will recalculate popularity metrics for all questions. This may take a while. Continue?')) {
+                return;
+            }
+            
+            try {
+                showLoading('Recalculating metrics...');
+                
+                const params = new URLSearchParams();
+                if (category) params.append('category', category);
+                
+                const response = await fetch(`/api/analytics/recalculate?${params}`, {
+                    method: 'POST',
+                    headers: { 'X-Admin-Secret': adminSecret }
+                });
+                
+                if (response.status === 401 || response.status === 403) {
+                    showAuthModal();
+                    throw new Error('Authentication required');
+                }
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert(`Successfully recalculated metrics for ${data.processedQuestions || 'unknown number of'} questions`);
+                    await refreshData();
+                } else {
+                    throw new Error(data.error || 'Recalculation failed');
+                }
+            } catch (error) {
+                console.error('Error recalculating metrics:', error);
+                if (error.message.includes('fetch')) {
+                    showError('Failed to connect to server. Please check if the analytics API is running.');
+                } else {
+                    showError('Failed to recalculate metrics: ' + error.message);
+                }
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // Export data
+        async function exportData(format) {
+            const timeRange = document.getElementById('timeRange').value;
+            const category = document.getElementById('categoryFilter').value;
+            
+            const params = new URLSearchParams({
+                format: format,
+                range: timeRange,
+                ...(category && { category })
+            });
+            
+            try {
+                const response = await fetch(`/api/analytics/export?${params}`, {
+                    headers: { 'X-Admin-Secret': adminSecret }
+                });
+                
+                if (response.status === 401 || response.status === 403) {
+                    showAuthModal();
+                    throw new Error('Authentication required');
+                }
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `analytics-${timeRange}-${Date.now()}.${format}`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+                
+            } catch (error) {
+                console.error('Error exporting data:', error);
+                
+                // Fallback to demo data export
+                if (error.message.includes('fetch') || error.message.includes('HTTP error')) {
+                    showError('API not available. Creating export from demo data...');
+                    
+                    const mockData = {
+                        exportTime: new Date().toISOString(),
+                        timeRange: timeRange,
+                        category: category || 'all',
+                        questions: dashboardData?.topQuestions || [],
+                        overview: dashboardData?.overview || {}
+                    };
+                    
+                    let content, mimeType, filename;
+                    
+                    if (format === 'json') {
+                        content = JSON.stringify(mockData, null, 2);
+                        mimeType = 'application/json';
+                        filename = `analytics-demo-${timeRange}-${Date.now()}.json`;
+                    } else {
+                        // Create CSV content
+                        const csvRows = [
+                            ['Title', 'Category', 'Type', 'Popularity Score', 'Views', 'Responses', 'Created'].join(',')
+                        ];
+                        
+                        (mockData.questions || []).forEach(q => {
+                            csvRows.push([
+                                `"${q.title}"`,
+                                q.category,
+                                q.questionType,
+                                q.popularityMetrics?.popularityScore || 0,
+                                q.popularityMetrics?.totalViews || 0,
+                                q.popularityMetrics?.totalResponses || 0,
+                                new Date(q.createdAt).toLocaleDateString()
+                            ].join(','));
+                        });
+                        
+                        content = csvRows.join('\n');
+                        mimeType = 'text/csv';
+                        filename = `analytics-demo-${timeRange}-${Date.now()}.csv`;
+                    }
+                    
+                    const blob = new Blob([content], { type: mimeType });
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = filename;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(url);
+                } else {
+                    showError('Failed to export data: ' + error.message);
+                }
+            }
+        }
+
+        // Utility functions
+        function showLoading(message = 'Loading...') {
+            // Add loading indicators to relevant sections
+            const sections = ['statsGrid', 'topQuestionsTable', 'trendingQuestionsTable'];
+            sections.forEach(sectionId => {
+                const section = document.getElementById(sectionId);
+                if (section) {
+                    section.innerHTML = `<div class="loading"><i class="fas fa-spinner"></i> ${message}</div>`;
+                }
+            });
+        }
+
+        function hideLoading() {
+            // Loading indicators will be replaced by actual content
+        }
+
+        function showError(message) {
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error';
+            errorDiv.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${message}`;
+            
+            const container = document.querySelector('.container');
+            if (container) {
+                container.insertBefore(errorDiv, container.firstChild);
+                
+                setTimeout(() => {
+                    if (errorDiv.parentNode) {
+                        errorDiv.remove();
+                    }
+                }, 5000);
+            }
+        }
+    </script>
+</body>
+</html>

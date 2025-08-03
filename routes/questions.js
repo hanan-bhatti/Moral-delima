@@ -214,11 +214,8 @@ router.get('/:category/:slug', async (req, res) => {
     const { category, slug } = req.params;
     const trackView = req.query.trackView !== 'false'; // Default to true
     
-    // FIXED: Use standard Mongoose query instead of custom method
-    const question = await Question.findOne({ 
-      category: category.toLowerCase(), 
-      slug: slug.toLowerCase() 
-    });
+    // FIXED: Use findByCategoryAndSlug method
+    const question = await Question.findByCategoryAndSlug(category, slug);
     
     if (!question) {
       return res.status(404).json({
@@ -264,11 +261,8 @@ router.post('/:category/:slug/respond', async (req, res) => {
   try {
     const { category, slug } = req.params;
     
-    // FIXED: Use standard Mongoose query instead of custom method
-    const question = await Question.findOne({ 
-      category: category.toLowerCase(), 
-      slug: slug.toLowerCase() 
-    });
+    // FIXED: Use findByCategoryAndSlug method
+    const question = await Question.findByCategoryAndSlug(category, slug);
     
     if (!question) {
       return res.status(404).json({
@@ -372,11 +366,8 @@ router.get('/:category/:slug/responses', async (req, res) => {
     const sortBy = req.query.sortBy || 'newest'; // 'newest', 'oldest'
     const skip = (page - 1) * limit;
     
-    // FIXED: Use standard Mongoose query instead of custom method
-    const question = await Question.findOne({ 
-      category: category.toLowerCase(), 
-      slug: slug.toLowerCase() 
-    });
+    // FIXED: Use findByCategoryAndSlug method
+    const question = await Question.findByCategoryAndSlug(category, slug);
     
     if (!question) {
       return res.status(404).json({

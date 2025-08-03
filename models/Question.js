@@ -415,7 +415,7 @@ questionSchema.statics.updateAllPopularityMetrics = async function() {
   return Promise.all(promises);
 };
 
-// MISSING METHOD: Find question by category and slug
+// FIXED: Find question by category and slug
 questionSchema.statics.findByCategoryAndSlug = function(category, slug) {
   return this.findOne({ 
     category: category.toLowerCase(), 
@@ -423,7 +423,7 @@ questionSchema.statics.findByCategoryAndSlug = function(category, slug) {
   });
 };
 
-// MISSING METHOD: Get latest questions
+// FIXED: Get latest questions
 questionSchema.statics.getLatest = function(limit = 10) {
   return this.find({})
     .sort({ createdAt: -1 })
@@ -431,7 +431,7 @@ questionSchema.statics.getLatest = function(limit = 10) {
     .select('title slug category questionText questionType createdAt featured popularityMetrics tags difficulty estimatedReadTime');
 };
 
-// MISSING METHOD: Get featured questions
+// FIXED: Get featured questions
 questionSchema.statics.getFeatured = function(limit = 10) {
   return this.find({ featured: true })
     .sort({ 'popularityMetrics.popularityScore': -1, createdAt: -1 })
@@ -439,7 +439,7 @@ questionSchema.statics.getFeatured = function(limit = 10) {
     .select('title slug category questionText questionType createdAt featured popularityMetrics tags difficulty estimatedReadTime');
 };
 
-// Static method to get questions by category with sorting options
+// FIXED: Static method to get questions by category with sorting options
 questionSchema.statics.getByCategory = function(category, options = {}) {
   const {
     sortBy = 'popularity', // 'popularity', 'trending', 'newest', 'most_responses'
@@ -482,10 +482,10 @@ questionSchema.statics.getByCategory = function(category, options = {}) {
     .sort(sortOptions)
     .skip(skip)
     .limit(limit)
-    .select('title slug category questionText questionType createdAt featured popularityMetrics tags difficulty estimatedReadTime');
+    .select('title slug category questionText questionType createdAt featured popularityMetrics tags difficulty estimatedReadTime choices responses views');
 };
 
-// Static method to get category statistics
+// FIXED: Static method to get category statistics
 questionSchema.statics.getCategoryStats = async function(category) {
   const totalQuestions = await this.countDocuments({ category: category.toLowerCase() });
   const multipleChoiceCount = await this.countDocuments({ 
@@ -528,20 +528,20 @@ questionSchema.statics.getCategoryStats = async function(category) {
   };
 };
 
-// Static method to get trending questions across all categories
+// FIXED: Static method to get trending questions across all categories
 questionSchema.statics.getTrending = function(limit = 10) {
   return this.find({})
     .sort({ 'popularityMetrics.trendingScore': -1 })
     .limit(limit)
-    .select('title slug category questionText questionType createdAt popularityMetrics');
+    .select('title slug category questionText questionType createdAt popularityMetrics tags difficulty estimatedReadTime');
 };
 
-// Static method to get most popular questions across all categories
+// FIXED: Static method to get most popular questions across all categories
 questionSchema.statics.getMostPopular = function(limit = 10) {
   return this.find({})
     .sort({ 'popularityMetrics.popularityScore': -1 })
     .limit(limit)
-    .select('title slug category questionText questionType createdAt popularityMetrics');
+    .select('title slug category questionText questionType createdAt popularityMetrics tags difficulty estimatedReadTime');
 };
 
 // Enhanced toJSON method

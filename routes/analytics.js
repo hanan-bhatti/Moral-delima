@@ -44,12 +44,12 @@ router.get('/dashboard', async (req, res) => {
               $group: {
                 _id: null,
                 totalQuestions: { $sum: 1 },
-                totalViews: { $sum: '$popularityMetrics.totalViews' },
-                totalResponses: { $sum: '$popularityMetrics.totalResponses' },
-                avgPopularity: { $avg: '$popularityMetrics.popularityScore' },
-                avgEngagement: { $avg: '$popularityMetrics.engagementRate' },
-                totalUniqueViews: { $sum: '$popularityMetrics.uniqueViews' },
-                totalUniqueResponses: { $sum: '$popularityMetrics.uniqueResponses' }
+                totalViews: { $sum: { $ifNull: ['$popularityMetrics.totalViews', 0] } },
+                totalResponses: { $sum: { $ifNull: ['$popularityMetrics.totalResponses', 0] } },
+                avgPopularity: { $avg: { $ifNull: ['$popularityMetrics.popularityScore', 0] } },
+                avgEngagement: { $avg: { $ifNull: ['$popularityMetrics.engagementRate', 0] } },
+                totalUniqueViews: { $sum: { $ifNull: ['$popularityMetrics.uniqueViews', 0] } },
+                totalUniqueResponses: { $sum: { $ifNull: ['$popularityMetrics.uniqueResponses', 0] } }
               }
             }
           ],
@@ -60,9 +60,9 @@ router.get('/dashboard', async (req, res) => {
               $group: {
                 _id: '$questionType',
                 count: { $sum: 1 },
-                totalViews: { $sum: '$popularityMetrics.totalViews' },
-                totalResponses: { $sum: '$popularityMetrics.totalResponses' },
-                avgPopularity: { $avg: '$popularityMetrics.popularityScore' }
+                totalViews: { $sum: { $ifNull: ['$popularityMetrics.totalViews', 0] } },
+                totalResponses: { $sum: { $ifNull: ['$popularityMetrics.totalResponses', 0] } },
+                avgPopularity: { $avg: { $ifNull: ['$popularityMetrics.popularityScore', 0] } }
               }
             }
           ],
@@ -73,10 +73,10 @@ router.get('/dashboard', async (req, res) => {
               $group: {
                 _id: '$category',
                 questionsCount: { $sum: 1 },
-                totalViews: { $sum: '$popularityMetrics.totalViews' },
-                totalResponses: { $sum: '$popularityMetrics.totalResponses' },
-                avgPopularity: { $avg: '$popularityMetrics.popularityScore' },
-                avgEngagement: { $avg: '$popularityMetrics.engagementRate' }
+                totalViews: { $sum: { $ifNull: ['$popularityMetrics.totalViews', 0] } },
+                totalResponses: { $sum: { $ifNull: ['$popularityMetrics.totalResponses', 0] } },
+                avgPopularity: { $avg: { $ifNull: ['$popularityMetrics.popularityScore', 0] } },
+                avgEngagement: { $avg: { $ifNull: ['$popularityMetrics.engagementRate', 0] } }
               }
             },
             { $sort: { avgPopularity: -1 } }
@@ -129,8 +129,8 @@ router.get('/dashboard', async (req, res) => {
                   day: { $dayOfMonth: '$createdAt' }
                 },
                 questionsCreated: { $sum: 1 },
-                totalViews: { $sum: '$popularityMetrics.totalViews' },
-                totalResponses: { $sum: '$popularityMetrics.totalResponses' }
+                totalViews: { $sum: { $ifNull: ['$popularityMetrics.totalViews', 0] } },
+                totalResponses: { $sum: { $ifNull: ['$popularityMetrics.totalResponses', 0] } }
               }
             },
             { $sort: { '_id.year': 1, '_id.month': 1, '_id.day': 1 } }
@@ -207,7 +207,10 @@ router.get('/question/:category/:slug', async (req, res) => {
       });
     }
     
-    // Analyze views over time
+    // Analyze views over time - handle null/undefined views array
+    const views = question.views || [];
+    const responses = question.responses || [];
+    
     const viewsAnalysis = {};
     const now = new Date();
     const periods = {
@@ -218,7 +221,7 @@ router.get('/question/:category/:slug', async (req, res) => {
     
     Object.keys(periods).forEach(period => {
       const cutoff = new Date(now.getTime() - periods[period]);
-      viewsAnalysis[period] = question.views.filter(view => 
+      viewsAnalysis[period] = views.filter(view => 
         new Date(view.timestamp) >= cutoff
       ).length;
     });
@@ -227,18 +230,18 @@ router.get('/question/:category/:slug', async (req, res) => {
     const responsesAnalysis = {};
     Object.keys(periods).forEach(period => {
       const cutoff = new Date(now.getTime() - periods[period]);
-      responsesAnalysis[period] = question.responses.filter(response => 
+      responsesAnalysis[period] = responses.filter(response => 
         new Date(response.timestamp) >= cutoff
       ).length;
     });
     
     // Get unique viewers and responders
-    const uniqueViewers = new Set(question.views.map(view => view.ipAddress)).size;
-    const uniqueResponders = new Set(question.responses.map(response => response.ipAddress)).size;
+    const uniqueViewers = new Set(views.map(view => view.ipAddress)).size;
+    const uniqueResponders = new Set(responses.map(response => response.ipAddress)).size;
     
     // Analyze response patterns for multiple choice questions
     let choiceAnalysis = null;
-    if (question.questionType === 'multiple_choice') {
+    if (question.questionType === 'multiple_choice' && question.choices) {
       choiceAnalysis = question.choices.map(choice => {
         const percentage = question.totalVotes > 0 ? 
           Math.round((choice.votes / question.totalVotes) * 100) : 0;
@@ -256,7 +259,7 @@ router.get('/question/:category/:slug', async (req, res) => {
     const hourlyViews = Array(24).fill(0);
     const last24h = new Date(now.getTime() - 24 * 60 * 60 * 1000);
     
-    question.views.forEach(view => {
+    views.forEach(view => {
       const viewDate = new Date(view.timestamp);
       if (viewDate >= last24h) {
         const hour = viewDate.getHours();
@@ -266,14 +269,14 @@ router.get('/question/:category/:slug', async (req, res) => {
     
     // Calculate engagement metrics
     const engagementMetrics = {
-      viewToResponseRate: question.views.length > 0 ? 
-        Math.round((question.responses.length / question.views.length) * 100) : 0,
+      viewToResponseRate: views.length > 0 ? 
+        Math.round((responses.length / views.length) * 100) : 0,
       uniqueEngagementRate: uniqueViewers > 0 ? 
         Math.round((uniqueResponders / uniqueViewers) * 100) : 0,
-      avgResponsesPerDay: question.responses.length > 0 ? 
-        Math.round((question.responses.length / Math.max(1, (now - question.createdAt) / (24 * 60 * 60 * 1000))) * 100) / 100 : 0,
-      avgViewsPerDay: question.views.length > 0 ? 
-        Math.round((question.views.length / Math.max(1, (now - question.createdAt) / (24 * 60 * 60 * 1000))) * 100) / 100 : 0
+      avgResponsesPerDay: responses.length > 0 ? 
+        Math.round((responses.length / Math.max(1, (now - question.createdAt) / (24 * 60 * 60 * 1000))) * 100) / 100 : 0,
+      avgViewsPerDay: views.length > 0 ? 
+        Math.round((views.length / Math.max(1, (now - question.createdAt) / (24 * 60 * 60 * 1000))) * 100) / 100 : 0
     };
     
     const analytics = {
@@ -286,14 +289,14 @@ router.get('/question/:category/:slug', async (req, res) => {
         createdAt: question.createdAt,
         featured: question.featured
       },
-      popularityMetrics: question.popularityMetrics,
+      popularityMetrics: question.popularityMetrics || {},
       viewsAnalysis,
       responsesAnalysis,
       uniqueMetrics: {
         uniqueViewers,
         uniqueResponders,
-        totalViews: question.views.length,
-        totalResponses: question.responses.length
+        totalViews: views.length,
+        totalResponses: responses.length
       },
       choiceAnalysis,
       hourlyViewPattern: hourlyViews.map((views, hour) => ({
@@ -350,10 +353,10 @@ router.get('/category/:category', async (req, res) => {
               $group: {
                 _id: null,
                 totalQuestions: { $sum: 1 },
-                totalViews: { $sum: '$popularityMetrics.totalViews' },
-                totalResponses: { $sum: '$popularityMetrics.totalResponses' },
-                avgPopularity: { $avg: '$popularityMetrics.popularityScore' },
-                avgEngagement: { $avg: '$popularityMetrics.engagementRate' },
+                totalViews: { $sum: { $ifNull: ['$popularityMetrics.totalViews', 0] } },
+                totalResponses: { $sum: { $ifNull: ['$popularityMetrics.totalResponses', 0] } },
+                avgPopularity: { $avg: { $ifNull: ['$popularityMetrics.popularityScore', 0] } },
+                avgEngagement: { $avg: { $ifNull: ['$popularityMetrics.engagementRate', 0] } },
                 multipleChoiceCount: {
                   $sum: { $cond: [{ $eq: ['$questionType', 'multiple_choice'] }, 1, 0] }
                 },
@@ -392,13 +395,13 @@ router.get('/category/:category', async (req, res) => {
           popularityDistribution: [
             {
               $bucket: {
-                groupBy: '$popularityMetrics.popularityScore',
+                groupBy: { $ifNull: ['$popularityMetrics.popularityScore', 0] },
                 boundaries: [0, 10, 25, 50, 100, 500, 1000, Infinity],
                 default: 'other',
                 output: {
                   count: { $sum: 1 },
-                  avgViews: { $avg: '$popularityMetrics.totalViews' },
-                  avgResponses: { $avg: '$popularityMetrics.totalResponses' }
+                  avgViews: { $avg: { $ifNull: ['$popularityMetrics.totalViews', 0] } },
+                  avgResponses: { $avg: { $ifNull: ['$popularityMetrics.totalResponses', 0] } }
                 }
               }
             }
@@ -456,7 +459,7 @@ router.get('/category/:category', async (req, res) => {
   }
 });
 
-// GET /api/analytics/trends - Get trending analysis
+// GET /api/analytics/trends - Get trending analysis (FIXED)
 router.get('/trends', async (req, res) => {
   try {
     const timeRange = req.query.range || '7d';
@@ -484,27 +487,39 @@ router.get('/trends', async (req, res) => {
       {
         $addFields: {
           recentViews: {
-            $size: {
-              $filter: {
-                input: '$views',
-                cond: { $gte: ['$this.timestamp', cutoffDate] }
-              }
+            $cond: {
+              if: { $isArray: '$views' },
+              then: {
+                $size: {
+                  $filter: {
+                    input: '$views',
+                    cond: { $gte: ['$$this.timestamp', cutoffDate] }
+                  }
+                }
+              },
+              else: 0
             }
           },
           recentResponses: {
-            $size: {
-              $filter: {
-                input: '$responses',
-                cond: { $gte: ['$this.timestamp', cutoffDate] }
-              }
+            $cond: {
+              if: { $isArray: '$responses' },
+              then: {
+                $size: {
+                  $filter: {
+                    input: '$responses',
+                    cond: { $gte: ['$$this.timestamp', cutoffDate] }
+                  }
+                }
+              },
+              else: 0
             }
           },
           trendScore: {
             $add: [
-              { $multiply: ['$popularityMetrics.viewsLast24h', 2] },
-              { $multiply: ['$popularityMetrics.responsesLast24h', 5] },
-              { $multiply: ['$popularityMetrics.viewsLast7d', 1] },
-              { $multiply: ['$popularityMetrics.responsesLast7d', 2] }
+              { $multiply: [{ $ifNull: ['$popularityMetrics.viewsLast24h', 0] }, 2] },
+              { $multiply: [{ $ifNull: ['$popularityMetrics.responsesLast24h', 0] }, 5] },
+              { $multiply: [{ $ifNull: ['$popularityMetrics.viewsLast7d', 0] }, 1] },
+              { $multiply: [{ $ifNull: ['$popularityMetrics.responsesLast7d', 0] }, 2] }
             ]
           }
         }
@@ -540,8 +555,8 @@ router.get('/trends', async (req, res) => {
         $addFields: {
           recentActivity: {
             $add: [
-              '$popularityMetrics.viewsLast24h',
-              { $multiply: ['$popularityMetrics.responsesLast24h', 2] }
+              { $ifNull: ['$popularityMetrics.viewsLast24h', 0] },
+              { $multiply: [{ $ifNull: ['$popularityMetrics.responsesLast24h', 0] }, 2] }
             ]
           }
         }
@@ -552,8 +567,8 @@ router.get('/trends', async (req, res) => {
           totalActivity: { $sum: '$recentActivity' },
           questionsCount: { $sum: 1 },
           avgActivity: { $avg: '$recentActivity' },
-          totalViews: { $sum: '$popularityMetrics.viewsLast24h' },
-          totalResponses: { $sum: '$popularityMetrics.responsesLast24h' }
+          totalViews: { $sum: { $ifNull: ['$popularityMetrics.viewsLast24h', 0] } },
+          totalResponses: { $sum: { $ifNull: ['$popularityMetrics.responsesLast24h', 0] } }
         }
       },
       { $sort: { totalActivity: -1 } },
@@ -680,18 +695,18 @@ router.get('/export', async (req, res) => {
         question.questionType,
         question.createdAt.toISOString(),
         question.featured,
-        question.popularityMetrics.popularityScore || 0,
-        question.popularityMetrics.totalViews || 0,
-        question.popularityMetrics.totalResponses || 0,
-        question.popularityMetrics.uniqueViews || 0,
-        question.popularityMetrics.uniqueResponses || 0,
-        question.popularityMetrics.engagementRate || 0,
-        question.popularityMetrics.viewsLast24h || 0,
-        question.popularityMetrics.viewsLast7d || 0,
-        question.popularityMetrics.viewsLast30d || 0,
-        question.popularityMetrics.responsesLast24h || 0,
-        question.popularityMetrics.responsesLast7d || 0,
-        question.popularityMetrics.responsesLast30d || 0
+        (question.popularityMetrics?.popularityScore || 0),
+        (question.popularityMetrics?.totalViews || 0),
+        (question.popularityMetrics?.totalResponses || 0),
+        (question.popularityMetrics?.uniqueViews || 0),
+        (question.popularityMetrics?.uniqueResponses || 0),
+        (question.popularityMetrics?.engagementRate || 0),
+        (question.popularityMetrics?.viewsLast24h || 0),
+        (question.popularityMetrics?.viewsLast7d || 0),
+        (question.popularityMetrics?.viewsLast30d || 0),
+        (question.popularityMetrics?.responsesLast24h || 0),
+        (question.popularityMetrics?.responsesLast7d || 0),
+        (question.popularityMetrics?.responsesLast30d || 0)
       ]);
       
       const csv = [csvHeaders.join(','), ...csvRows.map(row => row.join(','))].join('\n');
@@ -716,7 +731,7 @@ router.get('/export', async (req, res) => {
           createdAt: question.createdAt,
           featured: question.featured,
           tags: question.tags,
-          metrics: question.popularityMetrics
+          metrics: question.popularityMetrics || {}
         }))
       };
       

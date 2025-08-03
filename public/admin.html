@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Moral Dilemmas</title>
+    <link rel="stylesheet" href="/styles/main.css">
+    <link rel="stylesheet" href="/styles/admin.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body class="admin-body">
+    <div id="login-screen" class="login-screen">
+        <div class="login-container">
+            <h1>🔐 Admin Access</h1>
+            <form id="login-form" class="login-form">
+                <input type="password" id="admin-secret" placeholder="Enter admin secret" required class="login-input">
+                <button type="submit" class="login-button">Access Admin Panel</button>
+                <div id="login-error" class="login-error"></div>
+            </form>
+        </div>
+    </div>
+
+    <div id="admin-panel" class="admin-panel" style="display: none;">
+        <header class="admin-header">
+            <div class="admin-nav">
+                <h1>🤔 Admin Panel</h1>
+                <div class="admin-actions">
+                    <a href="/" class="view-site-button">View Site</a>
+                    <button id="logout-button" class="logout-button">Logout</button>
+                </div>
+            </div>
+        </header>
+
+        <main class="admin-main">
+            <div class="admin-tabs">
+                <button class="tab-button active" data-tab="dashboard">Dashboard</button>
+                <button class="tab-button" data-tab="questions">Questions</button>
+                <button class="tab-button" data-tab="create">Create Question</button>
+                <button class="tab-button" data-tab="subscribers">Subscribers</button>
+            </div>
+
+            <!-- Dashboard Tab -->
+            <div id="dashboard-tab" class="tab-content active">
+                <div class="dashboard-grid">
+                    <div class="stat-card">
+                        <h3>Total Questions</h3>
+                        <div id="total-questions" class="stat-number">-</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Featured Questions</h3>
+                        <div id="featured-questions" class="stat-number">-</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Multiple Choice</h3>
+                        <div id="multiple-choice-questions" class="stat-number">-</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Paragraph</h3>
+                        <div id="paragraph-questions" class="stat-number">-</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Active Subscribers</h3>
+                        <div id="total-subscribers" class="stat-number">-</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>New This Week</h3>
+                        <div id="recent-subscribers" class="stat-number">-</div>
+                    </div>
+                </div>
+
+                <div class="dashboard-sections">
+                    <section class="dashboard-section">
+                        <h3>Questions by Category</h3>
+                        <div id="category-stats" class="category-stats">
+                            <!-- Category statistics will be loaded here -->
+                        </div>
+                    </section>
+
+                    <section class="dashboard-section">
+                        <h3>Question Types</h3>
+                        <div id="question-type-stats" class="question-type-stats">
+                            <!-- Question type statistics will be loaded here -->
+                        </div>
+                    </section>
+
+                    <section class="dashboard-section">
+                        <h3>Recent Questions</h3>
+                        <div id="recent-questions" class="recent-questions">
+                            <!-- Recent questions will be loaded here -->
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <!-- Questions Tab -->
+            <div id="questions-tab" class="tab-content">
+                <div class="questions-header">
+                    <h2>Manage Questions</h2>
+                    <div class="questions-controls">
+                        <input type="search" id="questions-search" placeholder="Search questions..."
+                            class="search-input">
+                        <select id="question-type-filter" class="filter-select">
+                            <option value="">All Types</option>
+                            <option value="multiple_choice">Multiple Choice</option>
+                            <option value="paragraph">Paragraph</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="questions-list" class="questions-list">
+                    <!-- Questions will be loaded here -->
+                </div>
+
+                <div id="questions-pagination" class="pagination">
+                    <!-- Pagination will be generated here -->
+                </div>
+            </div>
+
+            <!-- Create Question Tab -->
+            <div id="create-tab" class="tab-content">
+                <div class="create-header">
+                    <h2>Create New Question</h2>
+                    <p>Craft a thought-provoking moral dilemma for the community.</p>
+                </div>
+
+                <form id="create-question-form" class="create-form">
+                    <div class="form-group">
+                        <label for="question-title">Question Title</label>
+                        <input type="text" id="question-title" required maxlength="200"
+                            placeholder="A compelling title for your moral dilemma">
+                        <small>Keep it engaging and descriptive (max 200 characters)</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="question-category">Category</label>
+                        <select id="question-category" required>
+                            <option value="">Select a category</option>
+                            <option value="love">Love</option>
+                            <option value="justice">Justice</option>
+                            <option value="survival">Survival</option>
+                            <option value="family">Family</option>
+                            <option value="freedom">Freedom</option>
+                            <option value="sacrifice">Sacrifice</option>
+                            <option value="truth">Truth</option>
+                            <option value="loyalty">Loyalty</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="question-type">Question Type</label>
+                        <select id="question-type" required>
+                            <option value="">Select question type</option>
+                            <option value="multiple_choice">Multiple Choice</option>
+                            <option value="paragraph">Paragraph Answer</option>
+                        </select>
+                        <small>Choose whether users select from options or write their own response</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="question-text">Question Description</label>
+                        <textarea id="question-text" required maxlength="2000" rows="6"
+                            placeholder="Describe the moral dilemma in detail. Set the scene, explain the stakes, and present the conflict clearly."></textarea>
+                        <small>Provide context and details that help readers understand the dilemma (max 2000
+                            characters)</small>
+                    </div>
+
+                    <div id="choices-section" class="form-group" style="display: none;">
+                        <label>Answer Choices</label>
+                        <div id="choices-container" class="choices-container">
+                            <div class="choice-input">
+                                <input type="text" placeholder="Choice 1" maxlength="500">
+                                <button type="button" class="remove-choice" style="display: none;">×</button>
+                            </div>
+                            <div class="choice-input">
+                                <input type="text" placeholder="Choice 2" maxlength="500">
+                                <button type="button" class="remove-choice" style="display: none;">×</button>
+                            </div>
+                        </div>
+                        <button type="button" id="add-choice" class="add-choice-button">+ Add Choice</button>
+                        <small>Provide 2-6 meaningful choices. Each choice should represent a different moral
+                            perspective.</small>
+                    </div>
+
+                    <div id="paragraph-section" class="form-group" style="display: none;">
+                        <div class="info-box">
+                            <h4>📝 Paragraph Question</h4>
+                            <p>Users will provide their own written response to this moral dilemma. No predefined
+                                choices are needed.</p>
+                        </div>
+                    </div>
+
+                    <div class="form-group checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="question-featured">
+                            <span class="checkmark"></span>
+                            Feature this question on the homepage
+                        </label>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="submit-button">
+                            <span class="button-text">Create Question</span>
+                            <span class="button-loading" style="display: none;">
+                                <div class="spinner"></div>
+                            </span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Subscribers Tab -->
+            <div id="subscribers-tab" class="tab-content">
+                <div class="subscribers-header">
+                    <h2>Subscriber Management</h2>
+                </div>
+
+                <div class="subscriber-stats-grid">
+                    <div class="stat-card">
+                        <h4>Total Subscribers</h4>
+                        <div id="sub-total" class="stat-number">-</div>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Active</h4>
+                        <div id="sub-active" class="stat-number">-</div>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Inactive</h4>
+                        <div id="sub-inactive" class="stat-number">-</div>
+                    </div>
+                    <div class="stat-card">
+                        <h4>This Week</h4>
+                        <div id="sub-recent" class="stat-number">-</div>
+                    </div>
+                </div>
+
+                <div id="subscribers-list" class="subscribers-list">
+                    <!-- Subscribers will be loaded here -->
+                </div>
+
+                <div id="subscribers-pagination" class="pagination">
+                    <!-- Pagination will be generated here -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="notification" class="notification"></div>
+
+    <script src="/js/admin.js"></script>
+</body>
+
+</html>

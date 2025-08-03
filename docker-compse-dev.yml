@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - MONGODB_URI=mongodb://mongo:27017/moral-dilemma-db-dev
+    depends_on:
+      - mongo
+    volumes:
+      - .:/app
+      - /app/node_modules
+    restart: unless-stopped
+    networks:
+      - dev-network
+
+  mongo:
+    image: mongo:6.0
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-dev-data:/data/db
+    restart: unless-stopped
+    networks:
+      - dev-network
+
+volumes:
+  mongo-dev-data:
+
+networks:
+  dev-network:
+    driver: bridge

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moral Dilemmas - Explore Life's Gray Areas</title>
+    <meta name="description" content="Challenge your moral compass with thought-provoking dilemmas. No right answers, just honest reflection and meaningful dialogue.">
+    <link rel="stylesheet" href="/styles/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-spinner"></div>
+        <p>Loading moral dilemmas...</p>
+    </div>
+
+    <header class="header">
+        <nav class="nav">
+            <div class="nav-brand">
+                <h1>🤔 Moral Dilemmas</h1>
+                <p>Where ethics meet curiosity</p>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main">
+        <section class="hero">
+            <div class="hero-content">
+                <h2 class="hero-title">Life's most challenging questions don't have easy answers</h2>
+                <p class="hero-subtitle">
+                    Explore moral dilemmas that challenge your thinking, understand different perspectives, 
+                    and engage in meaningful dialogue with others navigating the same complex choices.
+                </p>
+            </div>
+        </section>
+
+        <section class="featured-questions">
+            <div class="container">
+                <h3 class="section-title">Featured Dilemmas</h3>
+                <div id="questions-grid" class="questions-grid">
+                    <!-- Questions will be loaded here dynamically -->
+                </div>
+                
+                <div id="no-questions" class="no-questions" style="display: none;">
+                    <p>No questions available at the moment. Check back soon!</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="newsletter">
+            <div class="container">
+                <div class="newsletter-content">
+                    <h3>Never miss a moral dilemma</h3>
+                    <p>Get thought-provoking questions delivered to your inbox weekly. Join a community of curious minds exploring life's gray areas.</p>
+                    
+                    <form id="newsletter-form" class="newsletter-form">
+                        <div class="form-group">
+                            <input 
+                                type="email" 
+                                id="email-input" 
+                                placeholder="Enter your email address" 
+                                required
+                                class="newsletter-input"
+                            >
+                            <button type="submit" class="newsletter-button">
+                                <span class="button-text">Subscribe</span>
+                                <span class="button-loading" style="display: none;">
+                                    <div class="spinner"></div>
+                                </span>
+                            </button>
+                        </div>
+                        <div id="newsletter-message" class="newsletter-message"></div>
+                    </form>
+                    
+                    <p class="newsletter-disclaimer">
+                        We respect your privacy. Unsubscribe at any time. No spam, just meaningful questions.
+                    </p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Moral Dilemmas. A space for thoughtful reflection.</p>
+            <p>
+                <a href="/admin" class="footer-link">Admin</a> • 
+                <a href="mailto:hannanbhatti2006@gmail.com" class="footer-link">Contact</a>
+            </p>
+        </div>
+    </footer>
+
+    <script src="/js/homepage.js"></script>
+</body>
+</html>

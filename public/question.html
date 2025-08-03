@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">Loading Question... - Moral Dilemmas</title>
+    <meta name="description" id="page-description"
+        content="Explore this moral dilemma and share your perspective with others.">
+    <link rel="stylesheet" href="/styles/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-spinner"></div>
+        <p>Loading moral dilemma...</p>
+    </div>
+
+    <header class="header">
+        <nav class="nav">
+            <div class="nav-brand">
+                <a href="/" class="brand-link">
+                    <h1>🤔 Moral Dilemmas</h1>
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main">
+        <div id="question-container" class="container" style="display: none;">
+            <article class="question-article">
+                <div class="question-header">
+                    <div class="question-meta">
+                        <span id="question-category" class="category-tag"></span>
+                        <span id="question-type" class="question-type-tag"></span>
+                        <time id="question-date" class="question-date"></time>
+                    </div>
+                    <h1 id="question-title" class="question-title"></h1>
+                </div>
+
+                <div class="question-content">
+                    <div id="question-text" class="question-text"></div>
+                </div>
+
+                <!-- Multiple Choice Section -->
+                <div id="multiple-choice-section" class="question-interaction-section" style="display: none;">
+                    <div class="question-choices">
+                        <h3>What would you choose?</h3>
+                        <div id="choices-container" class="choices-container">
+                            <!-- Choices will be loaded here -->
+                        </div>
+                    </div>
+
+                    <div id="mc-response-section" class="response-section" style="display: none;">
+                        <h3>Share your reasoning</h3>
+                        <form id="mc-response-form" class="response-form">
+                            <textarea id="mc-explanation-input"
+                                placeholder="Why did you make this choice? Share your reasoning with the community..."
+                                required minlength="10" maxlength="1000" rows="4"></textarea>
+                            <div class="form-actions">
+                                <div class="character-count">
+                                    <span id="mc-char-count">0</span> / 1000 characters
+                                </div>
+                                <button type="submit" class="submit-button">
+                                    <span class="button-text">Share Your Perspective</span>
+                                    <span class="button-loading" style="display: none;">
+                                        <div class="spinner"></div>
+                                    </span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div id="mc-results-section" class="results-section" style="display: none;">
+                        <h3>Community Results</h3>
+                        <div id="mc-results-chart" class="results-chart">
+                            <!-- Results will be displayed here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Paragraph Response Section -->
+                <div id="paragraph-section" class="question-interaction-section" style="display: none;">
+                    <div class="paragraph-response">
+                        <h3>Share your response</h3>
+                        <p class="paragraph-instruction">
+                            There are no predefined choices for this dilemma. Share your thoughts, reasoning, and what
+                            you would do in this situation.
+                        </p>
+                        <form id="paragraph-response-form" class="response-form">
+                            <textarea id="paragraph-response-input"
+                                placeholder="What would you do in this situation? Share your complete response and reasoning..."
+                                required minlength="20" maxlength="2000" rows="6"></textarea>
+                            <div class="form-actions">
+                                <div class="character-count">
+                                    <span id="paragraph-char-count">0</span> / 2000 characters
+                                </div>
+                                <button type="submit" class="submit-button">
+                                    <span class="button-text">Share Your Response</span>
+                                    <span class="button-loading" style="display: none;">
+                                        <div class="spinner"></div>
+                                    </span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Shared Responses Section -->
+                <div id="responses-section" class="responses-section" style="display: none;">
+                    <h3 id="responses-title">Community Perspectives</h3>
+                    <div class="responses-filter">
+                        <div id="mc-choice-filter" class="choice-filter" style="display: none;">
+                            <label>Filter by choice:</label>
+                            <select id="choice-filter-select">
+                                <option value="">All responses</option>
+                                <!-- Choice options will be populated here -->
+                            </select>
+                        </div>
+                        <div class="responses-sort">
+                            <label>Sort by:</label>
+                            <select id="sort-responses">
+                                <option value="newest">Newest first</option>
+                                <option value="oldest">Oldest first</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="responses-container" class="responses-container">
+                        <!-- Community responses will be loaded here -->
+                    </div>
+                    <button id="load-more-responses" class="load-more-button" style="display: none;">
+                        Load More Responses
+                    </button>
+                </div>
+
+                <!-- Thank You Section -->
+                <div id="thank-you-section" class="thank-you-section" style="display: none;">
+                    <div class="thank-you-content">
+                        <h3>✅ Thank you for sharing!</h3>
+                        <p>Your perspective has been added to the community discussion.
+                        </p>
+                    </div>
+                </div>
+            </article>
+
+            <aside class="question-sidebar">
+                <div class="sidebar-section">
+                    <h4>Question Stats</h4>
+                    <div id="question-stats" class="question-stats">
+                        <div class="stat-item">
+                            <span class="stat-label">Type:</span>
+                            <span id="sidebar-question-type" class="stat-value">-</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Responses:</span>
+                            <span id="sidebar-response-count" class="stat-value">-</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Created:</span>
+                            <span id="sidebar-question-date" class="stat-value">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h4>Related Dilemmas</h4>
+                    <div id="related-questions" class="related-questions">
+                        <!-- Related questions will be loaded here -->
+                    </div>
+                </div>
+                <div class="sidebar-section newsletter-sidebar">
+                    <h4>Stay Updated</h4>
+                    <p>Get new moral dilemmas delivered to your inbox.</p>
+                    <form id="sidebar-newsletter-form" class="newsletter-form-small">
+                        <input type="email" placeholder="Your email" required class="newsletter-input-small">
+                        <button type="submit" class="newsletter-button-small">Subscribe</button>
+                    </form>
+                </div>
+            </aside>
+        </div>
+
+        <div id="error-container" class="error-container" style="display: none;">
+            <div class="error-content">
+                <h2>Question Not Found</h2>
+                <p>The moral dilemma you're looking for doesn't exist or has been removed.</p>
+                <a href="/" class="back-home-button">← Back to Homepage</a>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Moral Dilemmas. A space for thoughtful reflection.</p>
+        </div>
+    </footer>
+
+    <script src="/js/question.js"></script>
+</body>
+
+</html>

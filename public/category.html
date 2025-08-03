@@ -1,0 +1,1882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moral Dilemma - Explore Life's Toughest Questions</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --primary: #667eea;
+            --primary-dark: #5a67d8;
+            --secondary: #764ba2;
+            --accent: #f093fb;
+            --success: #48bb78;
+            --warning: #ed8936;
+            --error: #f56565;
+            --dark: #1a202c;
+            --gray-50: #f7fafc;
+            --gray-100: #edf2f7;
+            --gray-200: #e2e8f0;
+            --gray-300: #cbd5e0;
+            --gray-400: #a0aec0;
+            --gray-500: #718096;
+            --gray-600: #4a5568;
+            --gray-700: #2d3748;
+            --gray-800: #1a202c;
+            --gray-900: #171923;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: var(--gray-800);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        /* Header Styles */
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        /* Main Content */
+        .main-content {
+            background: white;
+            margin: 2rem 0;
+            border-radius: 1rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: linear-gradient(135deg, var(--gray-50) 0%, var(--gray-100) 100%);
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--gray-600);
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+
+        .search-bar {
+            max-width: 500px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            border: 2px solid var(--gray-200);
+            border-radius: 2rem;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-400);
+        }
+
+        /* Filters */
+        .filters {
+            padding: 2rem;
+            border-bottom: 1px solid var(--gray-200);
+            background: var(--gray-50);
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-label {
+            font-weight: 500;
+            color: var(--gray-700);
+        }
+
+        .filter-select {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--gray-300);
+            border-radius: 0.5rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .filter-select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
+        }
+
+        /* Categories Grid */
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            padding: 2rem;
+        }
+
+        .category-card {
+            background: white;
+            border: 1px solid var(--gray-200);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .category-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary);
+        }
+
+        .category-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            text-transform: capitalize;
+            color: var(--gray-800);
+        }
+
+        .category-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.875rem;
+            color: var(--gray-600);
+        }
+
+        /* Questions List */
+        .questions-section {
+            padding: 2rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--gray-800);
+        }
+
+        .questions-grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .question-card {
+            background: white;
+            border: 1px solid var(--gray-200);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .question-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary);
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .question-category {
+            background: var(--primary);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: capitalize;
+        }
+
+        .question-type {
+            background: var(--gray-100);
+            color: var(--gray-700);
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .question-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--gray-800);
+            line-height: 1.4;
+        }
+
+        .question-text {
+            color: var(--gray-600);
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .question-stats {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.875rem;
+            color: var(--gray-500);
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        /* Question Detail Page */
+        .question-detail {
+            padding: 2rem;
+        }
+
+        .question-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .question-meta {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--gray-600);
+            font-size: 0.875rem;
+        }
+
+        .question-detail-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--gray-800);
+            line-height: 1.2;
+        }
+
+        .question-detail-text {
+            font-size: 1.125rem;
+            color: var(--gray-700);
+            margin-bottom: 2rem;
+            line-height: 1.8;
+        }
+
+        /* Response Form */
+        .response-section {
+            background: var(--gray-50);
+            border-radius: 0.75rem;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .response-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--gray-800);
+        }
+
+        .choices-list {
+            display: grid;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .choice-option {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem;
+            background: white;
+            border: 2px solid var(--gray-200);
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .choice-option:hover {
+            border-color: var(--primary);
+        }
+
+        .choice-option.selected {
+            border-color: var(--primary);
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .choice-radio {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--gray-300);
+            border-radius: 50%;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .choice-option.selected .choice-radio {
+            border-color: var(--primary);
+            background: var(--primary);
+        }
+
+        .choice-option.selected .choice-radio::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+        }
+
+        .choice-text {
+            font-weight: 500;
+            color: var(--gray-800);
+        }
+
+        .choice-results {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--gray-600);
+        }
+
+        .choice-bar {
+            width: 100px;
+            height: 6px;
+            background: var(--gray-200);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .choice-bar-fill {
+            height: 100%;
+            background: var(--primary);
+            transition: width 0.5s ease;
+        }
+
+        .explanation-input {
+            width: 100%;
+            min-height: 120px;
+            padding: 1rem;
+            border: 2px solid var(--gray-200);
+            border-radius: 0.5rem;
+            resize: vertical;
+            font-family: inherit;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .explanation-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .response-textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 1rem;
+            border: 2px solid var(--gray-200);
+            border-radius: 0.5rem;
+            resize: vertical;
+            font-family: inherit;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+            margin-bottom: 1rem;
+        }
+
+        .response-textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--gray-200);
+            color: var(--gray-700);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-300);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* Responses List */
+        .responses-section {
+            margin: 2rem 0;
+        }
+
+        .responses-list {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .response-item {
+            background: white;
+            border: 1px solid var(--gray-200);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+        }
+
+        .response-choice {
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .response-explanation {
+            color: var(--gray-700);
+            line-height: 1.6;
+            margin-bottom: 0.75rem;
+        }
+
+        .response-date {
+            font-size: 0.875rem;
+            color: var(--gray-500);
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 2rem 0;
+        }
+
+        .pagination-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--gray-300);
+            background: white;
+            color: var(--gray-700);
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .pagination-btn:hover {
+            background: var(--gray-50);
+            border-color: var(--primary);
+        }
+
+        .pagination-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .pagination-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Loading States */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 3rem;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--gray-200);
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--gray-800);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray-500);
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: var(--gray-100);
+            color: var(--gray-700);
+        }
+
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 3000;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .toast {
+            background: white;
+            border-radius: 0.5rem;
+            padding: 1rem 1.5rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid var(--success);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            animation: slideIn 0.3s ease;
+        }
+
+        .toast.error {
+            border-left-color: var(--error);
+        }
+
+        .toast.warning {
+            border-left-color: var(--warning);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .filter-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .categories-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav {
+                display: none;
+            }
+
+            .question-header {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .question-meta {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .question-detail-title {
+                font-size: 2rem;
+            }
+
+            .pagination {
+                flex-wrap: wrap;
+            }
+        }
+
+        /* Utility Classes */
+        .hidden { display: none !important; }
+        .text-center { text-align: center; }
+        .text-left { text-align: left; }
+        .text-right { text-align: right; }
+        .mb-0 { margin-bottom: 0 !important; }
+        .mb-1 { margin-bottom: 0.5rem; }
+        .mb-2 { margin-bottom: 1rem; }
+        .mt-2 { margin-top: 1rem; }
+        .flex { display: flex; }
+        .items-center { align-items: center; }
+        .justify-between { justify-content: space-between; }
+        .gap-2 { gap: 1rem; }
+
+        .breadcrumb {
+            padding: 1rem 2rem;
+            border-bottom: 1px solid var(--gray-200);
+            background: var(--gray-50);
+        }
+
+        .breadcrumb a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .breadcrumb-separator {
+            margin: 0 0.5rem;
+            color: var(--gray-400);
+        }
+    </style>
+</head>
+<body x-data="app()" x-init="init()">
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="#" @click.prevent="navigateTo('home')" class="logo">
+                    <i class="fas fa-balance-scale"></i>
+                    Moral Dilemma
+                </a>
+                <nav class="nav">
+                    <a href="#" @click.prevent="navigateTo('home')" class="nav-link" 
+                       :class="{ active: currentPage === 'home' }">Home</a>
+                    <a href="#" @click.prevent="navigateTo('categories')" class="nav-link"
+                       :class="{ active: currentPage === 'categories' }">Categories</a>
+                    <a href="#" @click.prevent="navigateTo('trending')" class="nav-link"
+                       :class="{ active: currentPage === 'trending' }">Trending</a>
+                    <a href="#" @click.prevent="navigateTo('popular')" class="nav-link"
+                       :class="{ active: currentPage === 'popular' }">Popular</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Toast Container -->
+    <div class="toast-container">
+        <template x-for="toast in toasts" :key="toast.id">
+            <div class="toast" :class="toast.type">
+                <i :class="getToastIcon(toast.type)"></i>
+                <span x-text="toast.message"></span>
+                <button @click="removeToast(toast.id)" class="modal-close">×</button>
+            </div>
+        </template>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <main class="main-content">
+            <!-- Home Page -->
+            <div x-show="currentPage === 'home'" x-transition>
+                <!-- Hero Section -->
+                <section class="hero">
+                    <h1>Life's Toughest Questions</h1>
+                    <p>Explore moral dilemmas that challenge your values and discover how others navigate complex ethical decisions.</p>
+                    
+                    <div class="search-bar">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" x-model="searchQuery" @input="handleSearch" 
+                               placeholder="Search moral dilemmas..." class="search-input">
+                    </div>
+                </section>
+
+                <!-- Filters -->
+                <section class="filters" x-show="!searchQuery">
+                    <div class="filter-row">
+                        <div class="filter-group">
+                            <label class="filter-label">Sort by:</label>
+                            <select x-model="filters.sortBy" @change="loadQuestions" class="filter-select">
+                                <option value="newest">Newest</option>
+                                <option value="popular">Most Popular</option>
+                                <option value="trending">Trending</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label class="filter-label">Type:</label>
+                            <select x-model="filters.type" @change="loadQuestions" class="filter-select">
+                                <option value="all">All Types</option>
+                                <option value="multiple_choice">Multiple Choice</option>
+                                <option value="paragraph">Open Response</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label class="filter-label">Limit:</label>
+                            <select x-model="filters.limit" @change="loadQuestions" class="filter-select">
+                                <option value="6">6</option>
+                                <option value="12">12</option>
+                                <option value="24">24</option>
+                            </select>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Loading State -->
+                <div x-show="loading" class="loading">
+                    <div class="spinner"></div>
+                </div>
+
+                <!-- Questions List -->
+                <section class="questions-section" x-show="!loading">
+                    <div class="section-header">
+                        <h2 class="section-title" x-text="searchQuery ? 'Search Results' : 'Latest Questions'"></h2>
+                        <div x-show="searchResults && searchQuery" class="text-gray-600">
+                            <span x-text="searchResults.totalResults"></span> results found
+                        </div>
+                    </div>
+                    
+                    <div class="questions-grid">
+                        <template x-for="question in questions" :key="question._id">
+                            <div class="question-card" @click="viewQuestion(question)">
+                                <div class="question-header">
+                                    <span class="question-category" x-text="question.category"></span>
+                                    <span class="question-type" x-text="question.questionType === 'multiple_choice' ? 'Multiple Choice' : 'Open Response'"></span>
+                                </div>
+                                
+                                <h3 class="question-title" x-text="question.title"></h3>
+                                <p class="question-text" x-text="truncateText(question.questionText, 150)"></p>
+                                
+                                <div class="question-stats">
+                                    <span class="stat-item">
+                                        <i class="fas fa-eye"></i>
+                                        <span x-text="question.popularityMetrics?.totalViews || 0"></span>
+                                    </span>
+                                    <span class="stat-item">
+                                        <i class="fas fa-comments"></i>
+                                        <span x-text="question.popularityMetrics?.totalResponses || 0"></span>
+                                    </span>
+                                    <span class="stat-item">
+                                        <i class="fas fa-clock"></i>
+                                        <span x-text="formatDate(question.createdAt)"></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+
+                    <!-- Pagination for Search Results -->
+                    <div x-show="searchResults && searchResults.pagination.totalPages > 1" class="pagination">
+                        <button @click="changePage(searchResults.pagination.currentPage - 1)" 
+                                :disabled="!searchResults.pagination.hasPrevPage"
+                                class="pagination-btn">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        
+                        <template x-for="page in getPageNumbers(searchResults.pagination)" :key="page">
+                            <button @click="changePage(page)" 
+                                    :class="{ active: page === searchResults.pagination.currentPage }"
+                                    class="pagination-btn" x-text="page"></button>
+                        </template>
+                        
+                        <button @click="changePage(searchResults.pagination.currentPage + 1)" 
+                                :disabled="!searchResults.pagination.hasNextPage"
+                                class="pagination-btn">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Categories Page -->
+            <div x-show="currentPage === 'categories'" x-transition>
+                <section class="hero">
+                    <h1>Browse Categories</h1>
+                    <p>Explore moral dilemmas by category and discover questions that resonate with your interests.</p>
+                </section>
+
+                <div x-show="categoriesLoading" class="loading">
+                    <div class="spinner"></div>
+                </div>
+
+                <section class="categories-grid" x-show="!categoriesLoading">
+                    <template x-for="category in categories" :key="category.name">
+                        <div class="category-card" @click="viewCategory(category.name)">
+                            <h3 class="category-title" x-text="category.name"></h3>
+                            <div class="category-stats">
+                                <span x-text="category.count + ' questions'"></span>
+                                <span x-show="category.stats" x-text="category.stats?.avgPopularityScore ? Math.round(category.stats.avgPopularityScore) + ' avg score' : ''"></span>
+                            </div>
+                        </div>
+                    </template>
+                </section>
+            </div>
+
+            <!-- Category Detail Page -->
+            <div x-show="currentPage === 'category'" x-transition>
+                <div class="breadcrumb">
+                    <a href="#" @click.prevent="navigateTo('home')">Home</a>
+                    <span class="breadcrumb-separator">/</span>
+                    <a href="#" @click.prevent="navigateTo('categories')">Categories</a>
+                    <span class="breadcrumb-separator">/</span>
+                    <span x-text="selectedCategory" style="text-transform: capitalize;"></span>
+                </div>
+
+                <section class="hero">
+                    <h1 x-text="selectedCategory + ' Questions'" style="text-transform: capitalize;"></h1>
+                    <p>Explore moral dilemmas about <span x-text="selectedCategory"></span> and share your perspective.</p>
+                </section>
+
+                <!-- Category Filters -->
+                <section class="filters">
+                    <div class="filter-row">
+                        <div class="filter-group">
+                            <label class="filter-label">Sort by:</label>
+                            <select x-model="categoryFilters.sortBy" @change="loadCategoryQuestions" class="filter-select">
+                                <option value="popularity">Most Popular</option>
+                                <option value="trending">Trending</option>
+                                <option value="newest">Newest</option>
+                                <option value="most_responses">Most Responses</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label class="filter-label">Type:</label>
+                            <select x-model="categoryFilters.type" @change="loadCategoryQuestions" class="filter-select">
+                                <option value="all">All Types</option>
+                                <option value="multiple_choice">Multiple Choice</option>
+                                <option value="paragraph">Open Response</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label class="filter-label">Featured:</label>
+                            <select x-model="categoryFilters.featured" @change="loadCategoryQuestions" class="filter-select">
+                                <option value="false">All Questions</option>
+                                <option value="true">Featured Only</option>
+                            </select>
+                        </div>
+                    </div>
+                </section>
+
+                <div x-show="categoryLoading" class="loading">
+                    <div class="spinner"></div>
+                </div>
+
+                <section class="questions-section" x-show="!categoryLoading">
+                    <div class="section-header">
+                        <h2 class="section-title" x-text="'Questions in ' + selectedCategory" style="text-transform: capitalize;"></h2>
+                        <div x-show="categoryData && categoryData.pagination" class="text-gray-600">
+                            <span x-text="categoryData.pagination.totalQuestions"></span> total questions
+                        </div>
+                    </div>
+                    
+                    <div class="questions-grid">
+                        <template x-for="question in categoryQuestions" :key="question._id">
+                            <div class="question-card" @click="viewQuestion(question)">
+                                <div class="question-header">
+                                    <span class="question-category" x-text="question.category"></span>
+                                    <span class="question-type" x-text="question.questionType === 'multiple_choice' ? 'Multiple Choice' : 'Open Response'"></span>
+                                </div>
+                                
+                                <h3 class="question-title" x-text="question.title"></h3>
+                                <p class="question-text" x-text="truncateText(question.questionText, 150)"></p>
+                                
+                                <div class="question-stats">
+                                    <span class="stat-item">
+                                        <i class="fas fa-eye"></i>
+                                        <span x-text="question.popularityMetrics?.totalViews || 0"></span>
+                                    </span>
+                                    <span class="stat-item">
+                                        <i class="fas fa-comments"></i>
+                                        <span x-text="question.popularityMetrics?.totalResponses || 0"></span>
+                                    </span>
+                                    <span class="stat-item">
+                                        <i class="fas fa-clock"></i>
+                                        <span x-text="formatDate(question.createdAt)"></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+
+                    <!-- Category Pagination -->
+                    <div x-show="categoryData && categoryData.pagination.totalPages > 1" class="pagination">
+                        <button @click="changeCategoryPage(categoryData.pagination.currentPage - 1)" 
+                                :disabled="!categoryData.pagination.hasPrevPage"
+                                class="pagination-btn">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        
+                        <template x-for="page in getPageNumbers(categoryData.pagination)" :key="page">
+                            <button @click="changeCategoryPage(page)" 
+                                    :class="{ active: page === categoryData.pagination.currentPage }"
+                                    class="pagination-btn" x-text="page"></button>
+                        </template>
+                        
+                        <button @click="changeCategoryPage(categoryData.pagination.currentPage + 1)" 
+                                :disabled="!categoryData.pagination.hasNextPage"
+                                class="pagination-btn">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Trending Page -->
+            <div x-show="currentPage === 'trending'" x-transition>
+                <section class="hero">
+                    <h1>Trending Questions</h1>
+                    <p>Discover the moral dilemmas that are capturing everyone's attention right now.</p>
+                </section>
+
+                <div x-show="trendingLoading" class="loading">
+                    <div class="spinner"></div>
+                </div>
+
+                <section class="questions-section" x-show="!trendingLoading">
+                    <div class="section-header">
+                        <h2 class="section-title">What's Trending</h2>
+                        <div class="filter-group">
+                            <label class="filter-label">Category:</label>
+                            <select x-model="trendingCategory" @change="loadTrendingQuestions" class="filter-select">
+                                <option value="">All Categories</option>
+                                <template x-for="category in categories" :key="category.name">
+                                    <option :value="category.name" x-text="category.name" style="text-transform: capitalize;"></option>
+                                </template>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="questions-grid">
+                        <template x-for="question in trendingQuestions" :key="question._id">
+                            <div class="question-card" @click="viewQuestion(question)">
+                                <div class="question-header">
+                                    <span class="question-category" x-text="question.category"></span>
+                                    <span class="question-type" x-text="question.questionType === 'multiple_choice' ? 'Multiple Choice' : 'Open Response'"></span>
+                                </div>
+                                
+                                <h3 class="question-title" x-text="question.title"></h3>
+                                <p class="question-text" x-text="truncateText(question.questionText, 150)"></p>
+                                
+                                <div class="question-stats">
+                                    <span class="stat-item">
+                                        <i class="fas fa-fire" style="color: var(--warning);"></i>
+                                        <span x-text="Math.round(question.popularityMetrics?.trendingScore || 0)"></span>
+                                    </span>
+                                    <span class="stat-item">
+                                        <i class="fas fa-eye"></i>
+                                        <span x-text="question.popularityMetrics?.totalViews || 0"></span>
+                                    </span>
+                                    <span class="stat-item">
+                                        <i class="fas fa-comments"></i>
+                                        <span x-text="question.popularityMetrics?.totalResponses || 0"></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Popular Page -->
+            <div x-show="currentPage === 'popular'" x-transition>
+                <section class="hero">
+                    <h1>Most Popular Questions</h1>
+                    <p>The highest-rated moral dilemmas that have sparked the most thoughtful discussions.</p>
+                </section>
+
+                <div x-show="popularLoading" class="loading">
+                    <div class="spinner"></div>
+                </div>
+
+                <section class="questions-section" x-show="!popularLoading">
+                    <div class="section-header">
+                        <h2 class="section-title">All-Time Favorites</h2>
+                        <div class="filter-group">
+                            <label class="filter-label">Category:</label>
+                            <select x-model="popularCategory" @change="loadPopularQuestions" class="filter-select">
+                                <option value="">All Categories</option>
+                                <template x-for="category in categories" :key="category.name">
+                                    <option :value="category.name" x-text="category.name" style="text-transform: capitalize;"></option>
+                                </template>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="questions-grid">
+                        <template x-for="question in popularQuestions" :key="question._id">
+                            <div class="question-card" @click="viewQuestion(question)">
+                                <div class="question-header">
+                                    <span class="question-category" x-text="question.category"></span>
+                                    <span class="question-type" x-text="question.questionType === 'multiple_choice' ? 'Multiple Choice' : 'Open Response'"></span>
+                                </div>
+                                
+                                <h3 class="question-title" x-text="question.title"></h3>
+                                <p class="question-text" x-text="truncateText(question.questionText, 150)"></p>
+                                
+                                <div class="question-stats">
+                                    <span class="stat-item">
+                                        <i class="fas fa-star" style="color: var(--warning);"></i>
+                                        <span x-text="Math.round(question.popularityMetrics?.popularityScore || 0)"></span>
+                                    </span>
+                                    <span class="stat-item">
+                                        <i class="fas fa-eye"></i>
+                                        <span x-text="question.popularityMetrics?.totalViews || 0"></span>
+                                    </span>
+                                    <span class="stat-item">
+                                        <i class="fas fa-comments"></i>
+                                        <span x-text="question.popularityMetrics?.totalResponses || 0"></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Question Detail Page -->
+            <div x-show="currentPage === 'question'" x-transition>
+                <div class="breadcrumb" x-show="currentQuestion">
+                    <a href="#" @click.prevent="navigateTo('home')">Home</a>
+                    <span class="breadcrumb-separator">/</span>
+                    <a href="#" @click.prevent="viewCategory(currentQuestion.category)" x-text="currentQuestion.category" style="text-transform: capitalize;"></a>
+                    <span class="breadcrumb-separator">/</span>
+                    <span x-text="truncateText(currentQuestion.title, 50)"></span>
+                </div>
+
+                <div x-show="questionLoading" class="loading">
+                    <div class="spinner"></div>
+                </div>
+
+                <section class="question-detail" x-show="!questionLoading && currentQuestion">
+                    <div class="question-content">
+                        <div class="question-meta">
+                            <span class="meta-item">
+                                <i class="fas fa-tag"></i>
+                                <span x-text="currentQuestion.category" style="text-transform: capitalize;"></span>
+                            </span>
+                            <span class="meta-item">
+                                <i class="fas fa-list"></i>
+                                <span x-text="currentQuestion.questionType === 'multiple_choice' ? 'Multiple Choice' : 'Open Response'"></span>
+                            </span>
+                            <span class="meta-item">
+                                <i class="fas fa-eye"></i>
+                                <span x-text="currentQuestion.popularityMetrics?.totalViews || 0"></span> views
+                            </span>
+                            <span class="meta-item">
+                                <i class="fas fa-comments"></i>
+                                <span x-text="currentQuestion.popularityMetrics?.totalResponses || 0"></span> responses
+                            </span>
+                            <span class="meta-item">
+                                <i class="fas fa-clock"></i>
+                                <span x-text="formatDate(currentQuestion.createdAt)"></span>
+                            </span>
+                        </div>
+
+                        <h1 class="question-detail-title" x-text="currentQuestion.title"></h1>
+                        <p class="question-detail-text" x-text="currentQuestion.questionText"></p>
+
+                        <!-- Response Section -->
+                        <div class="response-section">
+                            <h3 class="response-title">Share Your Perspective</h3>
+                            
+                            <!-- Multiple Choice Response -->
+                            <div x-show="currentQuestion.questionType === 'multiple_choice' && !hasResponded">
+                                <div class="choices-list">
+                                    <template x-for="choice in currentQuestion.choices" :key="choice.text">
+                                        <div class="choice-option" 
+                                             :class="{ selected: selectedChoice === choice.text }"
+                                             @click="selectedChoice = choice.text">
+                                            <div class="choice-radio"></div>
+                                            <span class="choice-text" x-text="choice.text"></span>
+                                        </div>
+                                    </template>
+                                </div>
+                                
+                                <div class="mb-2">
+                                    <label class="filter-label mb-1" style="display: block;">Explain your reasoning (required):</label>
+                                    <textarea x-model="responseExplanation" 
+                                              placeholder="Why did you choose this option? What factors influenced your decision?"
+                                              class="explanation-input"></textarea>
+                                </div>
+                                
+                                <button @click="submitMultipleChoiceResponse" 
+                                        :disabled="!selectedChoice || !responseExplanation || responseExplanation.length < 10 || submittingResponse"
+                                        class="btn btn-primary">
+                                    <span x-show="!submittingResponse">Submit Response</span>
+                                    <span x-show="submittingResponse">Submitting...</span>
+                                </button>
+                            </div>
+
+                            <!-- Multiple Choice Results -->
+                            <div x-show="currentQuestion.questionType === 'multiple_choice' && (hasResponded || showResults)">
+                                <div class="choices-list">
+                                    <template x-for="choice in currentQuestion.choices" :key="choice.text">
+                                        <div class="choice-option" style="cursor: default;">
+                                            <div class="choice-radio" :class="{ selected: userChoice === choice.text }"></div>
+                                            <span class="choice-text" x-text="choice.text"></span>
+                                            <div class="choice-results">
+                                                <span x-text="choice.votes + ' votes'"></span>
+                                                <div class="choice-bar">
+                                                    <div class="choice-bar-fill" 
+                                                         :style="'width: ' + getChoicePercentage(choice) + '%'"></div>
+                                                </div>
+                                                <span x-text="getChoicePercentage(choice) + '%'"></span>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+                                
+                                <div class="mt-2 text-center">
+                                    <p class="text-gray-600">
+                                        Total votes: <span x-text="currentQuestion.totalVotes || 0"></span>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Paragraph Response -->
+                            <div x-show="currentQuestion.questionType === 'paragraph' && !hasResponded">
+                                <div class="mb-2">
+                                    <textarea x-model="paragraphResponse" 
+                                              placeholder="Share your thoughts on this moral dilemma. What would you do and why?"
+                                              class="response-textarea"></textarea>
+                                </div>
+                                
+                                <div class="mb-2">
+                                    <label class="filter-label mb-1" style="display: block;">Additional explanation (optional):</label>
+                                    <textarea x-model="responseExplanation" 
+                                              placeholder="Any additional context or reasoning you'd like to share..."
+                                              class="explanation-input"></textarea>
+                                </div>
+                                
+                                <button @click="submitParagraphResponse" 
+                                        :disabled="!paragraphResponse || paragraphResponse.length < 20 || submittingResponse"
+                                        class="btn btn-primary">
+                                    <span x-show="!submittingResponse">Submit Response</span>
+                                    <span x-show="submittingResponse">Submitting...</span>
+                                </button>
+                            </div>
+
+                            <!-- Thank you message -->
+                            <div x-show="hasResponded" class="text-center">
+                                <div style="background: var(--success); color: white; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem;">
+                                    <i class="fas fa-check-circle"></i>
+                                    Thank you for sharing your perspective!
+                                </div>
+                                <button @click="loadResponses" class="btn btn-outline btn-sm">
+                                    <i class="fas fa-comments"></i>
+                                    View Other Responses
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Responses List -->
+                        <div x-show="showResponsesList" class="responses-section">
+                            <div class="section-header">
+                                <h3 class="section-title">Community Responses</h3>
+                                <div class="filter-group">
+                                    <label class="filter-label">Sort by:</label>
+                                    <select x-model="responsesSortBy" @change="loadResponses" class="filter-select">
+                                        <option value="newest">Newest First</option>
+                                        <option value="oldest">Oldest First</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div x-show="responsesLoading" class="loading">
+                                <div class="spinner"></div>
+                            </div>
+
+                            <div x-show="!responsesLoading" class="responses-list">
+                                <template x-for="response in responses" :key="response.timestamp">
+                                    <div class="response-item">
+                                        <div x-show="response.choice" class="response-choice">
+                                            Choice: <span x-text="response.choice"></span>
+                                        </div>
+                                        <div x-show="response.responseText" class="response-explanation" x-text="response.responseText"></div>
+                                        <div x-show="response.explanation" class="response-explanation" x-text="response.explanation"></div>
+                                        <div class="response-date" x-text="formatDate(response.timestamp)"></div>
+                                    </div>
+                                </template>
+                            </div>
+
+                            <!-- Response Pagination -->
+                            <div x-show="responsePagination && responsePagination.totalPages > 1" class="pagination">
+                                <button @click="changeResponsePage(responsePagination.currentPage - 1)" 
+                                        :disabled="!responsePagination.hasPrevPage"
+                                        class="pagination-btn">
+                                    <i class="fas fa-chevron-left"></i>
+                                </button>
+                                
+                                <template x-for="page in getPageNumbers(responsePagination)" :key="page">
+                                    <button @click="changeResponsePage(page)" 
+                                            :class="{ active: page === responsePagination.currentPage }"
+                                            class="pagination-btn" x-text="page"></button>
+                                </template>
+                                
+                                <button @click="changeResponsePage(responsePagination.currentPage + 1)" 
+                                        :disabled="!responsePagination.hasNextPage"
+                                        class="pagination-btn">
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function app() {
+            return {
+                // State
+                currentPage: 'home',
+                loading: false,
+                categoriesLoading: false,
+                categoryLoading: false,
+                trendingLoading: false,
+                popularLoading: false,
+                questionLoading: false,
+                responsesLoading: false,
+                submittingResponse: false,
+                
+                // Data
+                questions: [],
+                categories: [],
+                categoryQuestions: [],
+                trendingQuestions: [],
+                popularQuestions: [],
+                currentQuestion: null,
+                responses: [],
+                toasts: [],
+                
+                // Search
+                searchQuery: '',
+                searchResults: null,
+                searchTimeout: null,
+                
+                // Filters
+                filters: {
+                    sortBy: 'newest',
+                    type: 'all',
+                    limit: 6
+                },
+                
+                // Category filters
+                categoryFilters: {
+                    sortBy: 'popularity',
+                    type: 'all',
+                    featured: 'false'
+                },
+                
+                // Pagination
+                categoryData: null,
+                responsePagination: null,
+                
+                // Current selections
+                selectedCategory: '',
+                trendingCategory: '',
+                popularCategory: '',
+                
+                // Response form
+                selectedChoice: '',
+                responseExplanation: '',
+                paragraphResponse: '',
+                hasResponded: false,
+                userChoice: '',
+                showResults: false,
+                showResponsesList: false,
+                responsesSortBy: 'newest',
+                
+                // Initialize app
+                async init() {
+                    await this.loadQuestions();
+                    await this.loadCategories();
+                },
+                
+                // Navigation
+                navigateTo(page) {
+                    this.currentPage = page;
+                    
+                    if (page === 'trending') {
+                        this.loadTrendingQuestions();
+                    } else if (page === 'popular') {
+                        this.loadPopularQuestions();
+                    }
+                },
+                
+                // API calls
+                async apiCall(endpoint, options = {}) {
+                    try {
+                        const response = await fetch(`/api${endpoint}`, {
+                            headers: {
+                                'Content-Type': 'application/json',
+                                ...options.headers
+                            },
+                            ...options
+                        });
+                        
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        
+                        return await response.json();
+                    } catch (error) {
+                        console.error('API call failed:', error);
+                        this.showToast('Failed to load data. Please try again.', 'error');
+                        throw error;
+                    }
+                },
+                
+                // Load questions
+                async loadQuestions() {
+                    this.loading = true;
+                    try {
+                        const params = new URLSearchParams({
+                            sortBy: this.filters.sortBy,
+                            limit: this.filters.limit
+                        });
+                        
+                        if (this.filters.type !== 'all') {
+                            params.append('type', this.filters.type);
+                        }
+                        
+                        const data = await this.apiCall(`/questions?${params}`);
+                        this.questions = data.data;
+                    } catch (error) {
+                        this.questions = [];
+                    } finally {
+                        this.loading = false;
+                    }
+                },
+                
+                // Load categories
+                async loadCategories() {
+                    this.categoriesLoading = true;
+                    try {
+                        const data = await this.apiCall('/questions/categories?includeStats=true');
+                        this.categories = data.data;
+                    } catch (error) {
+                        this.categories = [];
+                    } finally {
+                        this.categoriesLoading = false;
+                    }
+                },
+                
+                // Search handling
+                handleSearch() {
+                    clearTimeout(this.searchTimeout);
+                    
+                    if (!this.searchQuery.trim()) {
+                        this.searchResults = null;
+                        this.loadQuestions();
+                        return;
+                    }
+                    
+                    this.searchTimeout = setTimeout(() => {
+                        this.performSearch();
+                    }, 500);
+                },
+                
+                async performSearch(page = 1) {
+                    this.loading = true;
+                    try {
+                        const params = new URLSearchParams({
+                            q: this.searchQuery,
+                            page: page,
+                            limit: 12,
+                            sortBy: 'popularity'
+                        });
+                        
+                        const data = await this.apiCall(`/questions/search?${params}`);
+                        this.searchResults = data.data;
+                        this.questions = data.data.questions;
+                    } catch (error) {
+                        this.searchResults = null;
+                        this.questions = [];
+                    } finally {
+                        this.loading = false;
+                    }
+                },
+                
+                // Category operations
+                viewCategory(categoryName) {
+                    this.selectedCategory = categoryName;
+                    this.currentPage = 'category';
+                    this.categoryFilters = {
+                        sortBy: 'popularity',
+                        type: 'all',
+                        featured: 'false'
+                    };
+                    this.loadCategoryQuestions();
+                },
+                
+                async loadCategoryQuestions(page = 1) {
+                    this.categoryLoading = true;
+                    try {
+                        const params = new URLSearchParams({
+                            page: page,
+                            limit: 20,
+                            sortBy: this.categoryFilters.sortBy,
+                            type: this.categoryFilters.type,
+                            featured: this.categoryFilters.featured
+                        });
+                        
+                        const data = await this.apiCall(`/questions/category/${this.selectedCategory}?${params}`);
+                        this.categoryData = data.data;
+                        this.categoryQuestions = data.data.questions;
+                    } catch (error) {
+                        this.categoryQuestions = [];
+                        this.categoryData = null;
+                    } finally {
+                        this.categoryLoading = false;
+                    }
+                },
+                
+                // Trending questions
+                async loadTrendingQuestions() {
+                    this.trendingLoading = true;
+                    try {
+                        const params = new URLSearchParams({
+                            limit: 20
+                        });
+                        
+                        if (this.trendingCategory) {
+                            params.append('category', this.trendingCategory);
+                        }
+                        
+                        const data = await this.apiCall(`/questions/trending?${params}`);
+                        this.trendingQuestions = data.data;
+                    } catch (error) {
+                        this.trendingQuestions = [];
+                    } finally {
+                        this.trendingLoading = false;
+                    }
+                },
+                
+                // Popular questions
+                async loadPopularQuestions() {
+                    this.popularLoading = true;
+                    try {
+                        const params = new URLSearchParams({
+                            limit: 20
+                        });
+                        
+                        if (this.popularCategory) {
+                            params.append('category', this.popularCategory);
+                        }
+                        
+                        const data = await this.apiCall(`/questions/popular?${params}`);
+                        this.popularQuestions = data.data;
+                    } catch (error) {
+                        this.popularQuestions = [];
+                    } finally {
+                        this.popularLoading = false;
+                    }
+                },
+                
+                // Question detail
+                async viewQuestion(question) {
+                    this.currentQuestion = question;
+                    this.currentPage = 'question';
+                    this.resetResponseForm();
+                    
+                    // Load full question details
+                    this.questionLoading = true;
+                    try {
+                        const data = await this.apiCall(`/questions/${question.category}/${question.slug}`);
+                        this.currentQuestion = data.data;
+                    } catch (error) {
+                        this.showToast('Failed to load question details', 'error');
+                    } finally {
+                        this.questionLoading = false;
+                    }
+                },
+                
+                // Response form handling
+                resetResponseForm() {
+                    this.selectedChoice = '';
+                    this.responseExplanation = '';
+                    this.paragraphResponse = '';
+                    this.hasResponded = false;
+                    this.userChoice = '';
+                    this.showResults = false;
+                    this.showResponsesList = false;
+                },
+                
+                async submitMultipleChoiceResponse() {
+                    if (!this.selectedChoice || !this.responseExplanation || this.responseExplanation.length < 10) {
+                        this.showToast('Please select a choice and provide an explanation (at least 10 characters)', 'warning');
+                        return;
+                    }
+                    
+                    this.submittingResponse = true;
+                    try {
+                        const response = await this.apiCall(`/questions/${this.currentQuestion.category}/${this.currentQuestion.slug}/respond`, {
+                            method: 'POST',
+                            body: JSON.stringify({
+                                choice: this.selectedChoice,
+                                explanation: this.responseExplanation
+                            })
+                        });
+                        
+                        if (response.success) {
+                            this.hasResponded = true;
+                            this.userChoice = this.selectedChoice;
+                            this.showResults = true;
+                            
+                            // Update question data with new results
+                            this.currentQuestion.choices = response.data.choices;
+                            this.currentQuestion.totalVotes = response.data.totalVotes;
+                            
+                            this.showToast('Thank you for sharing your perspective!', 'success');
+                        }
+                    } catch (error) {
+                        this.showToast('Failed to submit response. Please try again.', 'error');
+                    } finally {
+                        this.submittingResponse = false;
+                    }
+                },
+                
+                async submitParagraphResponse() {
+                    if (!this.paragraphResponse || this.paragraphResponse.length < 20) {
+                        this.showToast('Please provide a response (at least 20 characters)', 'warning');
+                        return;
+                    }
+                    
+                    this.submittingResponse = true;
+                    try {
+                        const response = await this.apiCall(`/questions/${this.currentQuestion.category}/${this.currentQuestion.slug}/respond`, {
+                            method: 'POST',
+                            body: JSON.stringify({
+                                responseText: this.paragraphResponse,
+                                explanation: this.responseExplanation || ''
+                            })
+                        });
+                        
+                        if (response.success) {
+                            this.hasResponded = true;
+                            this.showToast('Thank you for sharing your perspective!', 'success');
+                        }
+                    } catch (error) {
+                        this.showToast('Failed to submit response. Please try again.', 'error');
+                    } finally {
+                        this.submittingResponse = false;
+                    }
+                },
+                
+                // Load responses
+                async loadResponses(page = 1) {
+                    this.showResponsesList = true;
+                    this.responsesLoading = true;
+                    
+                    try {
+                        const params = new URLSearchParams({
+                            page: page,
+                            limit: 10,
+                            sortBy: this.responsesSortBy
+                        });
+                        
+                        const data = await this.apiCall(`/questions/${this.currentQuestion.category}/${this.currentQuestion.slug}/responses?${params}`);
+                        this.responses = data.data.responses;
+                        this.responsePagination = data.data.pagination;
+                    } catch (error) {
+                        this.responses = [];
+                        this.responsePagination = null;
+                    } finally {
+                        this.responsesLoading = false;
+                    }
+                },
+                
+                // Pagination helpers
+                changePage(page) {
+                    if (this.searchQuery) {
+                        this.performSearch(page);
+                    }
+                },
+                
+                changeCategoryPage(page) {
+                    this.loadCategoryQuestions(page);
+                },
+                
+                changeResponsePage(page) {
+                    this.loadResponses(page);
+                },
+                
+                getPageNumbers(pagination) {
+                    if (!pagination) return [];
+                    
+                    const pages = [];
+                    const current = pagination.currentPage;
+                    const total = pagination.totalPages;
+                    
+                    if (total <= 7) {
+                        for (let i = 1; i <= total; i++) {
+                            pages.push(i);
+                        }
+                    } else {
+                        if (current <= 4) {
+                            for (let i = 1; i <= 5; i++) {
+                                pages.push(i);
+                            }
+                            pages.push('...');
+                            pages.push(total);
+                        } else if (current >= total - 3) {
+                            pages.push(1);
+                            pages.push('...');
+                            for (let i = total - 4; i <= total; i++) {
+                                pages.push(i);
+                            }
+                        } else {
+                            pages.push(1);
+                            pages.push('...');
+                            for (let i = current - 1; i <= current + 1; i++) {
+                                pages.push(i);
+                            }
+                            pages.push('...');
+                            pages.push(total);
+                        }
+                    }
+                    
+                    return pages.filter((page, index, arr) => arr.indexOf(page) === index);
+                },
+                
+                // Helper functions
+                truncateText(text, length) {
+                    if (!text) return '';
+                    return text.length > length ? text.substring(0, length) + '...' : text;
+                },
+                
+                formatDate(dateString) {
+                    if (!dateString) return '';
+                    const date = new Date(dateString);
+                    return date.toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric'
+                    });
+                },
+                
+                getChoicePercentage(choice) {
+                    if (!this.currentQuestion.totalVotes || this.currentQuestion.totalVotes === 0) {
+                        return 0;
+                    }
+                    return Math.round((choice.votes / this.currentQuestion.totalVotes) * 100);
+                },
+                
+                // Toast notifications
+                showToast(message, type = 'success') {
+                    const toast = {
+                        id: Date.now(),
+                        message,
+                        type
+                    };
+                    
+                    this.toasts.push(toast);
+                    
+                    setTimeout(() => {
+                        this.removeToast(toast.id);
+                    }, 5000);
+                },
+                
+                removeToast(id) {
+                    this.toasts = this.toasts.filter(toast => toast.id !== id);
+                },
+                
+                getToastIcon(type) {
+                    switch (type) {
+                        case 'success': return 'fas fa-check-circle';
+                        case 'error': return 'fas fa-exclamation-circle';
+                        case 'warning': return 'fas fa-exclamation-triangle';
+                        default: return 'fas fa-info-circle';
+                    }
+                }
+            };
+        }
+    </script>
+</body>
+</html>

@@ -1,16 +1,28 @@
+# Node modules (always ignore, will be reinstalled in container)
 node_modules
-npm-debug.log
-Dockerfile
-.dockerignore
-.git
-.gitignore
-README.md
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Environment files
 .env
-.nyc_output
+
+# Testing outputs
 coverage
 .nyc_output
 .coverage
-logs
-*.log
-backups
+
+# Git and local dev files
+.git
+.gitignore
 .DS_Store
+README.md
+
+# Docker files (not needed in image)
+Dockerfile
+.dockerignore
+
+# Backups
+backups

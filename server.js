@@ -674,7 +674,6 @@ const corsOptions = {
       'http://localhost:3000',
       'http://localhost:3001',
       'http://127.0.0.1:3000',
-      'https://moral-delimmas.up.railway.app'
     ].filter(Boolean);
     
     // Allow requests with no origin (mobile apps, etc.)

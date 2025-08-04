@@ -36,7 +36,7 @@ const getClientIP = (req) => {
 // GET /api/questions - Get latest questions (for homepage)
 router.get('/', async (req, res) => {
   try {
-    const limit = parseInt(req.query.limit) || 6;
+    const limit = parseInt(req.query.limit) || 12;
     const featured = req.query.featured === 'true';
     const sortBy = req.query.sortBy || 'newest'; // 'newest', 'popular', 'trending'
     

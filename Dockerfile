@@ -1,33 +1,29 @@
+# Use Node.js Alpine base image
 FROM node:18-alpine
 
 # Set working directory
 WORKDIR /app
 
 # Install system dependencies
-RUN apk add --no-cache \
-    curl \
-    tzdata
+RUN apk add --no-cache curl tzdata
 
 # Set timezone
 ENV TZ=UTC
 
-# Copy package files
+# Copy package files first (for caching layers)
 COPY package*.json ./
 
-# Install dependencies
-RUN npm ci --only=production && \
-    npm cache clean --force
+# Install full dependencies (you can switch to production-only later)
+RUN npm install && npm cache clean --force
 
 # Create non-root user
-RUN addgroup -g 1001 -S nodejs && \
-    adduser -S nodejs -u 1001
+RUN addgroup -g 1001 -S nodejs && adduser -S nodejs -u 1001
 
-# Copy application code
+# Copy the rest of the application code
 COPY --chown=nodejs:nodejs . .
 
-# Create necessary directories
-RUN mkdir -p logs backups && \
-    chown -R nodejs:nodejs logs backups
+# Create required folders and fix permissions
+RUN mkdir -p logs backups && chown -R nodejs:nodejs logs backups
 
 # Switch to non-root user
 USER nodejs
@@ -35,9 +31,9 @@ USER nodejs
 # Expose port
 EXPOSE 3000
 
-# Health check
+# Healthcheck (optional, useful in Docker or Railway environments)
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:3000/health || exit 1
+  CMD curl -f http://localhost:3000/health || exit 1
 
-# Start application
+# Run the app
 CMD ["npm", "start"]

@@ -14,10 +14,8 @@ ENV TZ=UTC
 COPY package*.json ./
 
 # Install full dependencies (you can switch to production-only later)
-RUN npm install && npm cache clean --force
-
-# Create non-root user
-RUN addgroup -g 1001 -S nodejs && adduser -S nodejs -u 1001
+RUN npm install && npm cache clean --force \
+    && addgroup -g 1001 -S nodejs && adduser -S nodejs -u 1001
 
 # Copy the rest of the application code
 COPY --chown=nodejs:nodejs . .

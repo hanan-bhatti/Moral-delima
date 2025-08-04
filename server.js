@@ -731,6 +731,16 @@ app.use(express.static(path.join(__dirname, 'public'), {
   }
 }));
 
+// Add this temporarily right after your middleware setup
+app.get('/api/test', (req, res) => {
+  console.log('🧪 Test API endpoint hit');
+  res.json({ 
+    success: true, 
+    message: 'API routing is working!',
+    timestamp: new Date().toISOString()
+  });
+});
+
 // Enhanced health check endpoint with comprehensive system info
 app.get('/health', async (req, res) => {
   const healthData = {

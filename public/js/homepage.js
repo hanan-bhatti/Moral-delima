@@ -23,7 +23,7 @@ class Homepage {
 
     async loadFeaturedQuestions() {
         try {
-            const response = await fetch('/api/questions?featured=true&limit=6');
+            const response = await fetch('/api/questions?featured=true&limit=12');
             const data = await response.json();
 
             if (!data.success) {
